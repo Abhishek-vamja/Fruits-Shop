@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block body %}
+	
 	<!-- breadcrumb-section -->
 	<div class="breadcrumb-section breadcrumb-bg">
 		<div class="container">
@@ -89,39 +90,36 @@
 							<thead>
 								<tr>
 									<th>Your order Details</th>
+									<th>Quantity</th>
 									<th>Price</th>
 								</tr>
 							</thead>
 							<tbody class="order-details-body">
 								<tr>
 									<td>Product</td>
+									<td>Quantity</td>
 									<td>Total</td>
 								</tr>
+								{% for i in carts %}
 								<tr>
-									<td>Strawberry</td>
-									<td>$85.00</td>
+									<td>{{i.product.title}}</td>
+									<td>{{i.quantity}}</td>
+									<td>${{i.product.price}}</td>
 								</tr>
-								<tr>
-									<td>Berry</td>
-									<td>$70.00</td>
-								</tr>
-								<tr>
-									<td>Lemon</td>
-									<td>$35.00</td>
-								</tr>
+								{% endfor %}
 							</tbody>
 							<tbody class="checkout-details">
 								<tr>
 									<td>Subtotal</td>
-									<td>$190</td>
+									<td>${{sub_total}}</td>
 								</tr>
 								<tr>
 									<td>Shipping</td>
-									<td>$50</td>
+									<td>${{shipping_amount}}</td>
 								</tr>
 								<tr>
 									<td>Total</td>
-									<td>$240</td>
+									<td style="color: green;">${{total_amount}}</td>
 								</tr>
 							</tbody>
 						</table>
@@ -160,4 +158,5 @@
 		</div>
 	</div>
 	<!-- end logo carousel -->
-{% endblock body %}
+
+{% endblock %}
