@@ -20,21 +20,22 @@
 	<div class="product-section mt-150 mb-150">
 		<div class="container">
 
-			<div class="row">
+			<!-- <div class="row">
                 <div class="col-md-12">
                     <div class="product-filters">
                         <ul>
-                            <li class="active" data-filter="*">All</li>
-                            <li data-filter=".strawberry">Strawberry</li>
-                            <li data-filter=".berry">Berry</li>
-                            <li data-filter=".lemon">Lemon</li>
+							{% for i in all_products %}
+                            <li data-filter="{{i.product.category}}">{{i.title}}</li>
+							{% endfor %}
                         </ul>
                     </div>
                 </div>
-            </div>
-
+            </div> -->
+			{% for product , range , nslide in allProds %}
+			<h3><samp>{{product.0.category|capfirst}}</samp></h3>
+			<hr>
 			<div class="row product-lists">
-				{% for i in all_products %}
+				{% for i in product %}
 				<div class="col-lg-4 col-md-6 text-center strawberry">
 					<div class="single-product-item">
 						<div class="product-image">
@@ -47,8 +48,9 @@
 				</div>
 				{% endfor %}
 			</div>
+			{% endfor %}
 
-			<div class="row">
+			<!-- <div class="row">
 				<div class="col-lg-12 text-center">
 					<div class="pagination-wrap">
 						<ul>
@@ -57,7 +59,7 @@
 						</ul>
 					</div>
 				</div>
-			</div>
+			</div> -->
 		</div>
 	</div>
 	<!-- end products -->

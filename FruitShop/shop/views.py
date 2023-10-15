@@ -36,7 +36,9 @@ class ShopView(LoginRequiredMixin, View):
     def get(self, request):
         all_products = Product.objects.all()
         
-        """Pagination logic."""
+        """
+        Pagination logic.
+        """
         no_of_page = 3
         last = math.ceil(len(all_products)/int(no_of_page))
         page = request.GET.get('page')
@@ -54,10 +56,24 @@ class ShopView(LoginRequiredMixin, View):
             prev = "/shop/items/?page=" + str(page - 1)
             next = "/shop/items/?page=" + str(page + 1)
 
+        """
+        Product show category vise.
+        """
+        allProds=[]
+        catprods= Product.objects.values('category', 'id')
+
+        cats= {item["category"] for item in catprods}
+        for cat in cats:
+            prod=Product.objects.filter(category=cat)
+            n = len(prod)
+            nSlides = n // 4 + math.ceil((n / 4) - (n // 4))
+            allProds.append([prod, range(1, nSlides), nSlides])
+
         context = {
             'all_products': all_products,
+            'allProds': allProds,
             'prev': prev,
-            'next': next
+            'next': next,
         }
 
         return render(request, 'shop.html', context)
