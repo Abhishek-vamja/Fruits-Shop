@@ -42,7 +42,7 @@
 									<td class="product-name">{{i.product.title}}</td>
 									<td class="product-price">${{i.product.price}}</td>
 									<td class="product-quantity"><a href="{% url 'remove_quantity' i.id %}">-</a><samp style="margin: 20px;">{{i.quantity}}</samp><a href="{% url 'update_quantity' i.id %}">+</a>
-									<td class="product-total">{{ i.quantity|multiply:i.product.price }}</td>
+									<td class="product-total">${{ i.quantity|multiply:i.product.price }}</td>
 								</tr>
 								{% empty %}
 								
