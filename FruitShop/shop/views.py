@@ -221,8 +221,8 @@ class OrderView(LoginRequiredMixin, View):
         return render(request, 'order.html', context)
 
 
-"""Delete user order."""
-def delete_order(request, product_id):
-    prod = OrderPlaced.objects.get(id=product_id)
-    prod.delete()
-    return redirect('order')
+    """Delete user order."""
+    def delete_order(request, product_id):
+        prod = OrderPlaced.objects.get(id=product_id)
+        prod.delete()
+        return redirect('order')

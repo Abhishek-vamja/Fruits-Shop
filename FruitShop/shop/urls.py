@@ -20,5 +20,5 @@ urlpatterns = [
     path('checkout/', CheckoutView.as_view(), name='checkout'),
 
     path('order/', OrderView.as_view(), name='order'),
-    path('delete_order/<str:product_id>/', delete_order, name='delete_order')
+    path('delete_order/<str:product_id>/', OrderView.delete_order, name='delete_order')
 ]
