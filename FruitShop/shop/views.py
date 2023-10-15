@@ -2,13 +2,10 @@
 Views for shop app.
 """
 
-from django.shortcuts import render, redirect
 import math
-from django.core.paginator import Paginator , EmptyPage, PageNotAnInteger
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import View
-from django.contrib import messages
-from django.http import HttpResponseRedirect
+from django.shortcuts import render, redirect
+from django.contrib.auth.mixins import LoginRequiredMixin
 from shop.models import Category, Product , Cart, Checkout, OrderPlaced
 
 
