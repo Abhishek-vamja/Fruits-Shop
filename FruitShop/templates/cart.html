@@ -35,15 +35,19 @@
 							</thead>
 							<tbody>
 								{% for i in cart_items %}
+								{% load custom_filters %}
 								<tr class="table-body-row">
-									<td class="product-remove"><a href="#"><i class="far fa-window-close"></i></a></td>
+									<td class="product-remove"><a href="{% url 'remove_from_cart' i.id %}"><i class="far fa-window-close"></i></a></td>
 									<td class="product-image"><img src="{{i.product.image.url}}" alt=""></td>
 									<td class="product-name">{{i.product.title}}</td>
 									<td class="product-price">${{i.product.price}}</td>
-									<td class="product-quantity"><input type="number" placeholder="{{i.quantity}}"></td>
-									<td class="product-total"></td>
-
+									<td class="product-quantity"><a href="{% url 'remove_quantity' i.id %}">-</a><samp style="margin: 20px;">{{i.quantity}}</samp><a href="{% url 'update_quantity' i.id %}">+</a>
+									<td class="product-total">{{ i.quantity|multiply:i.product.price }}</td>
 								</tr>
+								{% empty %}
+								
+								<samp style="color: red;">Your cart is empty </samp>
+								
 								{% endfor %}
 							</tbody>
 						</table>
@@ -75,15 +79,15 @@
 							</tbody>
 						</table>
 						<div class="cart-buttons">
-							<a href="cart.html" class="boxed-btn">Update Cart</a>
-							<a href="checkout.html" class="boxed-btn black">Check Out</a>
+							<a href="/shop/items/" class="boxed-btn">Continue Shop</a>
+							<a href="/shop/checkout/" class="boxed-btn black">Check Out</a>
 						</div>
 					</div>
 
 					<div class="coupon-section">
 						<h3>Apply Coupon</h3>
 						<div class="coupon-form-wrap">
-							<form action="index.html">
+							<form action="">
 								<p><input type="text" placeholder="Coupon"></p>
 								<p><input type="submit" value="Apply"></p>
 							</form>
@@ -92,7 +96,7 @@
 				</div>
 			</div>
 		</div>
-	</div{% static '>
+	</div>
 	<!-- end cart -->
 
 	<!-- logo caro' %}usel -->
@@ -102,19 +106,19 @@
 				<div class="col-lg-12">
 					<div class="logo-carousel-inner">
 						<div class="single-logo-item">
-							<img src="{'% static 'assets/img/company-logos/1.png' %}" alt="">
+							<img src="{% static 'assets/img/company-logos/1.png' %}" alt="">
 						</div>
 						<div class="single-logo-item">
-							<img src="{'% static 'assets/img/company-logos/2.png' %}" alt="">
+							<img src="{% static 'assets/img/company-logos/2.png' %}" alt="">
 						</div>
 						<div class="single-logo-item">
-							<img src="{'% static 'assets/img/company-logos/3.png' %}" alt="">
+							<img src="{% static 'assets/img/company-logos/3.png' %}" alt="">
 						</div>
 						<div class="single-logo-item">
-							<img src="{'% static 'assets/img/company-logos/4.png' %}" alt="">
+							<img src="{% static 'assets/img/company-logos/4.png' %}" alt="">
 						</div>
 						<div class="single-logo-item">
-							<img src="{'% static 'assets/img/company-logos/5.png' %}" alt="">
+							<img src="{% static 'assets/img/company-logos/5.png' %}" alt="">
 						</div>
 					</div>
 				</div>

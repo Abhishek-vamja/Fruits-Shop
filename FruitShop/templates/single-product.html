@@ -31,7 +31,7 @@
 						<p class="single-product-pricing"><span>Per Kg</span> ${{products.price}}</p>
 						<p>{{products.description}}</p>
 						<div class="single-product-form">
-							<form action="{% url 'add_to_cart' products.id %}" method="post">{% csrf_token %}
+							<form action="{% url 'add_to_cart' products.slug %}" method="post">{% csrf_token %}
 								<input type="number" placeholder="1" min="1">
 								<button type="submit" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to cart</button>
 							</form>

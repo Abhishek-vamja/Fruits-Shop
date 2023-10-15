@@ -64,3 +64,35 @@ class Checkout(BaseModel):
 
     def __str__(self) -> str:
         return str(self.user)
+
+
+STATUS_CHOICE = (
+    ('Order Pending','Order Pending'),
+    ('Confirmed','Confirmed'),
+    ('Packed','Packed'),
+    ('Shipped','Shipped'),
+    ('Outer Delivery','Outer Delivery'),
+    ('Delivered','Delivered'),
+)
+
+
+PAYMENT = (
+    ('Online','Online'),
+    ('COD','COD')
+)
+
+class OrderPlaced(BaseModel):
+    """OrderPlaced objects."""
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+    status = models.CharField(max_length=50,choices=STATUS_CHOICE,default='Order Pending')
+    paid = models.BooleanField(default=False)
+    payment = models.CharField(max_length=255,choices=PAYMENT,default='COD')
+    ordered_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-ordered_date']
+    
+    def __str__(self) -> str:
+        return f"Order {self.id} by {self.user}"

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% for i in order %}
+    <samp>{{ forloop.counter}}.</samp>
+    <td>{{i.product.title}}</td>
+        <tr>{{i.quantity}}</tr>
+        <tr>{{i.status}}</tr>
+        <tr>{{i.ordered_date}}</tr>
+        {% if i.paid %}
+        <tr>Payment Done</tr>
+        {% else %}
+        <tr>Payment Pending</tr>
+        {% endif %}
+        <a href="{% url 'delete_order' i.id %}"> X </a>
+        {% empty %}
+        <samp>No order yet</samp>
+    <hr>
+    {% endfor %}
+
+    {% if total %}
+    <h4>to pay:{{total}}</h4>
+    {% else %}
+    <h4><samp style="color: green;">Payment done</samp></h4>
+    {% endif %}
+
+</body>
+</html>
