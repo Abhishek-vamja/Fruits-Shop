@@ -40,9 +40,17 @@
 									<td class="product-remove"><a href="{% url 'remove_from_cart' i.id %}"><i class="far fa-window-close"></i></a></td>
 									<td class="product-image"><img src="{{i.product.image.url}}" alt=""></td>
 									<td class="product-name">{{i.product.title}}</td>
+									{% if i.product.is_time_limited %}
+									<td class="product-price">${{i.product.discount_price}}</td>
+									{% else %}
 									<td class="product-price">${{i.product.price}}</td>
+									{% endif %}
 									<td class="product-quantity"><a href="{% url 'remove_quantity' i.id %}">-</a><samp style="margin: 20px;">{{i.quantity}}</samp><a href="{% url 'update_quantity' i.id %}">+</a>
+									{% if i.product.is_time_limited %}
+									<td class="product-total">${{ i.quantity|multiply:i.product.discount_price }}</td>
+									{% else %}
 									<td class="product-total">${{ i.quantity|multiply:i.product.price }}</td>
+									{% endif %}
 								</tr>
 								{% empty %}
 								

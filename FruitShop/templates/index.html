@@ -100,6 +100,7 @@
 <!-- cart banner section -->
 <section class="cart-banner pt-100 pb-100">
 	<div class="container">
+		{% for i in offers %}
 		<div class="row clearfix">
 			<!--Image Column-->
 			<div class="image-column col-lg-6">
@@ -111,19 +112,17 @@
 							</span>
 						</div>
 					</div>
-					<img src="{'% static 'assets/img/a.jpg' %}" alt="">
+					<img src="{{i.image.url}}" alt="">
 				</div>
 			</div>
 			<!--Content Column-->
 			<div class="content-column col-lg-6">
-				<h3><span class="orange-text">Deal</span> of the month</h3>
-				<h4>Hikan Strwaberry</h4>
-				<div class="text">Quisquam minus maiores repudiandae nobis, minima saepe id, fugit ullam similique!
-					Beatae, minima quisquam molestias facere ea. Perspiciatis unde omnis iste natus error sit voluptatem
-					accusant</div>
+				<h3><span class="orange-text">Deal</span> of the {{i.deal_of}}</h3>
+				<h4>{{i.title}}</h4>
+				<div class="text">{{i.description}}</div>
 				<!--Countdown Timer-->
 				<div class="time-counter">
-					<div class="time-countdown clearfix" data-countdown="2020/2/01">
+					<div class="time-countdown clearfix" data-countdown="{{i.date}}">
 						<div class="counter-column">
 							<div class="inner"><span class="count">00</span>Days</div>
 						</div>
@@ -138,9 +137,10 @@
 						</div>
 					</div>
 				</div>
-				<a href="cart.html" class="cart-btn mt-3"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+				<a href="{% url 'single_product' i.slug %}" class="cart-btn mt-3"><i class="fa-sharp fa-solid fa-eye"></i></i>Quick View</a>
 			</div>
 		</div>
+		{% endfor %}
 	</div>
 </section>
 <!-- end cart banner section -->

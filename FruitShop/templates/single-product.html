@@ -1,116 +1,147 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block body %}
-	<!-- breadcrumb-section -->
-	<div class="breadcrumb-section breadcrumb-bg">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-8 offset-lg-2 text-center">
-					<div class="breadcrumb-text">
-						<p>See more Details</p>
-						<h1>Single Product</h1>
-					</div>
+<!-- breadcrumb-section -->
+<div class="breadcrumb-section breadcrumb-bg">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-8 offset-lg-2 text-center">
+				<div class="breadcrumb-text">
+					<p>See more Details</p>
+					<h1>Single Product</h1>
 				</div>
 			</div>
 		</div>
 	</div>
-	<!-- end breadcrumb section -->
+</div>
+</div>
+<!-- end breadcrumb section -->
+<!-- time session -->
+{% if products.is_time_limited %}
+<div class="container">
+	<h4><samp style="padding: 80px;"><span class="badge bg-success">Limited time offer</span></h4>
+	<div class="time-counter">
+		<div class="time-countdown clearfix" data-countdown="2023/10/20" style="float: left;">
+			<div class="counter-column">
+				<div class="inner"><span class="count">00</span>Days</div>
+			</div>
+			<div class="counter-column">
+				<div class="inner"><span class="count">00</span>Hours</div>
+			</div>
+			<div class="counter-column">
+				<div class="inner"><span class="count">00</span>Mins</div>
+			</div>
+			<div class="counter-column">
+				<div class="inner"><span class="count">00</span>Secs</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endif %}
+<!-- end time session -->
+<!-- single product -->
+<div class="single-product mt-150 mb-150">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-5">
+				<div class="single-product-img">
+					<img src="{{products.image.url}}" alt="">
+				</div>
+			</div>
+			<div class="col-md-7">
+				<div class="single-product-content">
+					<h3>{{products.title}}</h3>
+					{% if products.is_time_limited %}
+					<p class="single-product-pricing"><span>Per Kg</span>
+					<h4 style="text-decoration: line-through; color: #888;">${{products.price}}</h4>
+					</p>
+					<p class="single-product-pricing">${{products.discount_price}}</p>
+					{% else %}
+					<p class="single-product-pricing"><span>Per Kg</span> ${{products.price}}</p>
+					{% endif %}
+					<p>{{products.description}}</p>
+					<div class="single-product-form">
+						<form action="{% url 'add_to_cart' products.slug %}" method="post">{% csrf_token %}
+							<button type="submit" class="btn btn-warning"><i class="fas fa-shopping-cart"></i> Add to
+								cart</button>
+						</form>
+						<p><strong>Categories: </strong>Fruits, Organic</p>
+					</div>
+					<h4>Share:</h4>
+					<ul class="product-share">
+						<li><a href=""><i class="fab fa-facebook-f"></i></a></li>
+						<li><a href=""><i class="fab fa-twitter"></i></a></li>
+						<li><a href=""><i class="fab fa-google-plus-g"></i></a></li>
+						<li><a href=""><i class="fab fa-linkedin"></i></a></li>
+					</ul>
+					{% for i in messages %}
+					<hr>
+					<div class="alert alert-info" role="alert">
+						{{i}}
+					</div>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- end single product -->
 
-	<!-- single product -->
-	<div class="single-product mt-150 mb-150">
-		<div class="container">
-			<div class="row">
-				<div class="col-md-5">
-					<div class="single-product-img">
-						<img src="{{products.image.url}}" alt="">
-					</div>
-				</div>
-				<div class="col-md-7">
-					<div class="single-product-content">
-						<h3>{{products.title}}</h3>
-						<p class="single-product-pricing"><span>Per Kg</span> ${{products.price}}</p>
-						<p>{{products.description}}</p>
-						<div class="single-product-form">
-							<form action="{% url 'add_to_cart' products.slug %}" method="post">{% csrf_token %}
-								<input type="number" placeholder="1" min="1">
-								<button type="submit" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to cart</button>
-							</form>
-							<p><strong>Categories: </strong>Fruits, Organic</p>
-						</div>
-						<h4>Share:</h4>
-						<ul class="product-share">
-							<li><a href=""><i class="fab fa-facebook-f"></i></a></li>
-							<li><a href=""><i class="fab fa-twitter"></i></a></li>
-							<li><a href=""><i class="fab fa-google-plus-g"></i></a></li>
-							<li><a href=""><i class="fab fa-linkedin"></i></a></li>
-						</ul>
-						{% for i in messages %}
-							<hr>
-							<div class="alert alert-info" role="alert">
-								{{i}}
-							</div>
-                        {% endfor %}
-					</div>
+<!-- more products -->
+<div class="more-products mb-150">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-8 offset-lg-2 text-center">
+				<div class="section-title">
+					<h3><span class="orange-text">Related</span> Products</h3>
+					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid, fuga quas itaque eveniet
+						beatae optio.</p>
 				</div>
 			</div>
 		</div>
+		<div class="row">
+			{% for i in random_products|slice:3 %}
+			<div class="col-lg-4 col-md-6 text-center">
+				<div class="single-product-item">
+					<div class="product-image">
+						<a href="#"><img src="{{i.image.url}}" alt=""></a>
+					</div>
+					<h3>{{i.title}}</h3>
+					<p class="product-price"><span>Per Kg</span> ${{i.price}} </p>
+					<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+				</div>
+			</div>
+			{% endfor %}
+		</div>
 	</div>
-	<!-- end single product -->
+</div>
+<!-- end more products -->
 
-	<!-- more products -->
-	<div class="more-products mb-150">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-8 offset-lg-2 text-center">
-					<div class="section-title">	
-						<h3><span class="orange-text">Related</span> Products</h3>
-						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid, fuga quas itaque eveniet beatae optio.</p>
+<!-- logo carousel -->
+<div class="logo-carousel-section">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="logo-carousel-inner">
+					<div class="single-logo-item">
+						<img src="{'% static 'assets/img/company-logos/1.png' %}" alt="">
 					</div>
-				</div>
-			</div>
-			<div class="row">
-				{% for i in random_products|slice:3 %}
-				<div class="col-lg-4 col-md-6 text-center">
-					<div class="single-product-item">
-						<div class="product-image">
-							<a href="#"><img src="{{i.image.url}}" alt=""></a>
-						</div>
-						<h3>{{i.title}}</h3>
-						<p class="product-price"><span>Per Kg</span> ${{i.price}} </p>
-						<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+					<div class="single-logo-item">
+						<img src="{'% static 'assets/img/company-logos/2.png' %}" alt="">
 					</div>
-				</div>
-				{% endfor %}
-			</div>
-		</div>
-	</div>
-	<!-- end more products -->
-
-	<!-- logo carousel -->
-	<div class="logo-carousel-section">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-12">
-					<div class="logo-carousel-inner">
-						<div class="single-logo-item">
-							<img src="{'% static 'assets/img/company-logos/1.png' %}" alt="">
-						</div>
-						<div class="single-logo-item">
-							<img src="{'% static 'assets/img/company-logos/2.png' %}" alt="">
-						</div>
-						<div class="single-logo-item">
-							<img src="{'% static 'assets/img/company-logos/3.png' %}" alt="">
-						</div>
-						<div class="single-logo-item">
-							<img src="{'% static 'assets/img/company-logos/4.png' %}" alt="">
-						</div>
-						<div class="single-logo-item">
-							<img src="{'% static 'assets/img/company-logos/5.png' %}" alt="">
-						</div>
+					<div class="single-logo-item">
+						<img src="{'% static 'assets/img/company-logos/3.png' %}" alt="">
+					</div>
+					<div class="single-logo-item">
+						<img src="{'% static 'assets/img/company-logos/4.png' %}" alt="">
+					</div>
+					<div class="single-logo-item">
+						<img src="{'% static 'assets/img/company-logos/5.png' %}" alt="">
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	<!-- end logo carousel -->
+</div>
+<!-- end logo carousel -->
 {% endblock body %}

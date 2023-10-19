@@ -6,17 +6,26 @@ import math
 from django.views.generic import View
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
-from shop.models import Category, Product , Cart, Checkout, OrderPlaced
-
+from datetime import datetime, timedelta
+from shop.models import (
+    Category, Product , Cart, Checkout, OrderPlaced, OfferProduct
+    )
 
 class HomeView(LoginRequiredMixin, View):
     """
     Home page view.
     """
     def get(self, request):
-        all_products = Product.objects.all().order_by('?')
+        all_products = Product.objects.all()
+        offer_product = OfferProduct.objects.all()
+
+        current_date = datetime.now()
+        OfferProduct.objects.filter(date=current_date.strftime('%Y/%m/%d')).delete()
+        
+
         context = {
-            'all_products': all_products
+            'all_products': all_products,
+            'offers': offer_product,
         }
         return render(request, 'index.html', context)
 
@@ -34,7 +43,7 @@ class ShopView(LoginRequiredMixin, View):
     Shop items view.
     """
     def get(self, request):
-        all_products = Product.objects.all()
+        all_products = Product.objects.all().order_by('-id')
         
         """
         Pagination logic.
@@ -85,8 +94,7 @@ class SingleProductView(LoginRequiredMixin, View):
     """
     def get(self, request, product_slug):
         random_products = Product.objects.all().order_by('?')
-        products = Product.objects.get(slug=product_slug)
-
+        products = Product.objects.get(slug=product_slug)        
         context = {
             'random_products': random_products,
             'products': products
@@ -121,7 +129,10 @@ class CartVIew(LoginRequiredMixin, View):
         amount = 0
         shipping = 45
         for i in cart:
-            value = i.quantity * i.product.price
+            if i.product.is_time_limited:
+                value = i.quantity * i.product.discount_price
+            else:
+                value = i.quantity * i.product.price
             amount = amount + value
         total = amount + shipping
 
@@ -172,7 +183,10 @@ class CheckoutView(LoginRequiredMixin, View):
         amount = 0
         shipping = 45
         for i in cart:
-            value = i.quantity * i.product.price
+            if i.product.is_time_limited:
+                value = i.quantity * i.product.discount_price
+            else:
+                value = i.quantity * i.product.price
             amount = amount + value
         total = amount + shipping
 
