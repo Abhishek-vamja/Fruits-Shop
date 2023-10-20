@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}
+{% block style %}
+<style>
+    .product-item {
+        position: relative;
+        margin-bottom: 20px;
+        /* Adjust the margin as needed */
+    }
+
+    .offer-tag {
+        background-color: #FF5733;
+        color: #fff;
+        font-weight: bold;
+        font-size: 16px;
+        padding: 5px 10px;
+        border-radius: 4px;
+        display: inline-block;
+        position: absolute;
+        top: 10px;
+        /* Adjust the top position as needed */
+        left: 10px;
+        /* Adjust the left position as needed */
+    }
+</style>
+{% endblock style %}
+<!-- breadcrumb-section -->
+<div class="breadcrumb-section breadcrumb-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2 text-center">
+                <div class="breadcrumb-text">
+                    <p>Fresh and Organic</p>
+                    <h1>{{specific_category}}</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end breadcrumb section -->
+
+<!-- products -->
+<div class="product-section mt-150 mb-150">
+    <div class="container">
+
+        <!-- <div class="row">
+                <div class="col-md-12">
+                    <div class="product-filters">
+                        <ul>
+					
+                            <li data-filter="#"></li>
+                        </ul>
+                    </div>
+                </div>
+            </div> -->
+        <div class="row product-lists">
+            {% for i in all_products %}
+
+            <div class="col-lg-4 col-md-6 text-center strawberry">
+                <div class="single-product-item">
+                    {% if i.is_time_limited %}
+                    <div class="offer-tag">{{i.percent_off}}% OFF</div>
+                    {% endif %}
+                    <div class="product-image">
+                        <a href="#"><img src="{{i.image.url}}" alt=""></a>
+                    </div>
+                    <h3>{{i.title}}</h3>
+                    {% if i.is_time_limited %}
+                    <p class="product-price"><span>Per Kg</span> ${{i.discount_price}}</p>
+                    {% else %}
+                    <p class="product-price"><span>Per Kg</span> ${{i.price}}</p>
+                    {% endif %}
+
+                    <a href="{% url 'single_product' i.slug %}" class="cart-btn"><i class="fas fa-shopping-cart"></i>
+                        Quick View </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- <div class="row">
+				<div class="col-lg-12 text-center">
+					<div class="pagination-wrap">
+						<ul>
+							<li><a href="{{prev}}">Prev</a></li>					
+							<li><a href="{{next}}">Next</a></li>
+						</ul>
+					</div>
+				</div>
+			</div> -->
+    </div>
+</div>
+<!-- end products -->
+
+<!-- logo carousel -->
+<div class="logo-carousel-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="logo-carousel-inner">
+                    <div class="single-logo-item">
+                        <img src="{% static 'assets/img/company-logos/1.png' %}" alt="">
+                    </div>
+                    <div class="single-logo-item">
+                        <img src="{% static 'assets/img/company-logos/2.png' %}" alt="">
+                    </div>
+                    <div class="single-logo-item">
+                        <img src="{% static 'assets/img/company-logos/3.png' %}" alt="">
+                    </div>
+                    <div class="single-logo-item">
+                        <img src="{% static 'assets/img/company-logos/4.png' %}" alt="">
+                    </div>
+                    <div class="single-logo-item">
+                        <img src="{% static 'assets/img/company-logos/5.png' %}" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end logo carousel -->
+{% endblock body %}
