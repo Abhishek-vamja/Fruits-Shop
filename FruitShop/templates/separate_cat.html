@@ -43,17 +43,22 @@
 <!-- products -->
 <div class="product-section mt-150 mb-150">
     <div class="container">
-
-        <!-- <div class="row">
-                <div class="col-md-12">
-                    <div class="product-filters">
-                        <ul>
-					
-                            <li data-filter="#"></li>
-                        </ul>
-                    </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="product-filters">
+                    <ul>
+                        <a href="/shop/items/">
+                            <li data-filter=".all">All</li>
+                        </a>
+                        {% for i in all_category %}
+                        <a href="{% url 'category-list' i.slug %}">
+                            <li data-filter="{{i.title}}">{{i.title}}</li>
+                        </a>
+                        {% endfor %}
+                    </ul>
                 </div>
-            </div> -->
+            </div>
+        </div>
         <div class="row product-lists">
             {% for i in all_products %}
 
@@ -63,7 +68,7 @@
                     <div class="offer-tag">{{i.percent_off}}% OFF</div>
                     {% endif %}
                     <div class="product-image">
-                        <a href="#"><img src="{{i.image.url}}" alt=""></a>
+                        <a href="#"><img src="{{i.image.url}}" alt="" width="200px" height="250px"></a>
                     </div>
                     <h3>{{i.title}}</h3>
                     {% if i.is_time_limited %}

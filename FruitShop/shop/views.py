@@ -41,7 +41,7 @@ class ShopView(LoginRequiredMixin, View):
     """
     def get(self, request):
         all_products = Product.objects.all().order_by('-id')
-        
+        all_category = Category.objects.all().order_by('-id')
         """
         Pagination logic.
         """
@@ -77,6 +77,7 @@ class ShopView(LoginRequiredMixin, View):
 
         context = {
             'all_products': all_products,
+            'all_category': all_category,
             'allProds': allProds,
             'prev': prev,
             'next': next,
@@ -88,6 +89,8 @@ class ShopView(LoginRequiredMixin, View):
     def get_separate_category_list(request, category_slug):
 
         category_slug_to_retrieve = category_slug
+        all_category = Category.objects.all().order_by('-id')
+
         try:
             specific_category = Category.objects.get(slug=category_slug_to_retrieve)
         except Category.DoesNotExist:
@@ -97,12 +100,14 @@ class ShopView(LoginRequiredMixin, View):
             all_products = Product.objects.filter(category=specific_category)
             context = {
                 'specific_category': specific_category,
-                'all_products': all_products,                
+                'all_products': all_products,
+                'all_category': all_category,             
             }
         else:
             context = {
                 'specific_category': None,
                 'all_products': None,
+                'all_category': None,
             }
         return render(request, 'separate_cat.html', context)
 
