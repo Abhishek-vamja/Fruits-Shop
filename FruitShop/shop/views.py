@@ -111,26 +111,6 @@ class ShopView(LoginRequiredMixin, View):
             }
         return render(request, 'separate_cat.html', context)
 
-    """Listing only Juice"""
-    def get_juice_list(request):
-        category_slug_to_retrieve = 'fresh-juices'
-        try:
-            specific_category = Category.objects.get(slug=category_slug_to_retrieve)
-        except Category.DoesNotExist:
-            specific_category = None
-
-        if specific_category:
-            all_products = Product.objects.filter(category=specific_category)
-            context = {
-                'specific_category': specific_category,
-                'all_products': all_products,                
-            }
-        else:
-            context = {
-                'specific_category': None,
-                'all_products': None,
-            }
-        return render(request, 'juice.html', context)
 
 class SingleProductView(LoginRequiredMixin, View):
     """

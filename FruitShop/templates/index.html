@@ -111,7 +111,7 @@
 					<div class="offer-tag">{{i.percent_off}}% OFF</div>
 					{% endif %}
 					<div class="product-image">
-						<a href="{% url 'single_product' i.slug %}"><img src="{{i.image.url}}" alt=""></a>
+						<a href="{% url 'single_product' i.slug %}"><img src="{{i.image.url}}" alt="" width="200px" height="250px"></a>
 					</div>
 					<h3>{{i.title}}</h3>
 					{% if i.is_time_limited %}
