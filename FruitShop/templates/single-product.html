@@ -1,6 +1,30 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block body %}
+{% block style %}
+<style>
+	.product-item {
+		position: relative;
+		margin-bottom: 20px;
+		/* Adjust the margin as needed */
+	}
+
+	.offer-tag {
+		background-color: #FF5733;
+		color: #fff;
+		font-weight: bold;
+		font-size: 16px;
+		padding: 5px 10px;
+		border-radius: 4px;
+		display: inline-block;
+		position: absolute;
+		top: 10px;
+		/* Adjust the top position as needed */
+		left: 10px;
+		/* Adjust the left position as needed */
+	}
+</style>
+{% endblock style %}
 <!-- breadcrumb-section -->
 <div class="breadcrumb-section breadcrumb-bg">
 	<div class="container">
@@ -21,7 +45,7 @@
 <div class="container">
 	<h4><samp style="padding: 80px;"><span class="badge bg-success">Limited time offer</span></h4>
 	<div class="time-counter">
-		<div class="time-countdown clearfix" data-countdown="2023/10/20" style="float: left;">
+		<div class="time-countdown clearfix" data-countdown="{{products.date}}" style="float: left;">
 			<div class="counter-column">
 				<div class="inner"><span class="count">00</span>Days</div>
 			</div>
@@ -77,8 +101,8 @@
 					{% for i in messages %}
 					<hr>
 					<div class="alert alert-info" role="alert">
-						{{i}}
-					</div>
+						<samp>{{i}}<a href="/shop/cart/">cart</a></samp>
+					  </div>
 					{% endfor %}
 				</div>
 			</div>
@@ -102,13 +126,20 @@
 		<div class="row">
 			{% for i in random_products|slice:3 %}
 			<div class="col-lg-4 col-md-6 text-center">
+				{% if i.is_time_limited %}
+				<div class="offer-tag">{{i.percent_off}}% OFF</div>
+				{% endif %}
 				<div class="single-product-item">
 					<div class="product-image">
 						<a href="#"><img src="{{i.image.url}}" alt=""></a>
 					</div>
 					<h3>{{i.title}}</h3>
+					{% if i.is_time_limited %}
+					<p class="product-price"><span>Per Kg</span> ${{i.discount_price}} </p>
+					{% else %}
 					<p class="product-price"><span>Per Kg</span> ${{i.price}} </p>
-					<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+					{% endif %}
+					<a href="{% url 'single_product' i.slug %}" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
 				</div>
 			</div>
 			{% endfor %}

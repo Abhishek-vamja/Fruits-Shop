@@ -1,6 +1,30 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block body %}
+{% block style %}
+<style>
+	.product-item {
+		position: relative;
+		margin-bottom: 20px;
+		/* Adjust the margin as needed */
+	}
+
+	.offer-tag {
+		background-color: #FF5733;
+		color: #fff;
+		font-weight: bold;
+		font-size: 16px;
+		padding: 5px 10px;
+		border-radius: 4px;
+		display: inline-block;
+		position: absolute;
+		top: 10px;
+		/* Adjust the top position as needed */
+		left: 10px;
+		/* Adjust the left position as needed */
+	}
+</style>
+{% endblock style %}
 <!-- hero area -->
 <div class="hero-area hero-bg">
 	<div class="container">
@@ -83,12 +107,20 @@
 			{% for i in all_products|slice:3 %}
 			<div class="col-lg-4 col-md-6 text-center">
 				<div class="single-product-item">
+					{% if i.is_time_limited %}
+					<div class="offer-tag">{{i.percent_off}}% OFF</div>
+					{% endif %}
 					<div class="product-image">
 						<a href="{% url 'single_product' i.slug %}"><img src="{{i.image.url}}" alt=""></a>
 					</div>
 					<h3>{{i.title}}</h3>
+					{% if i.is_time_limited %}
+					<p class="product-price"><span>Per Kg</span> ${{i.discount_price}} </p>
+					{% else %}
 					<p class="product-price"><span>Per Kg</span> ${{i.price}} </p>
-					<a href="{% url 'single_product' i.slug %}" class="cart-btn"><i class="fas fa-shopping-cart"></i>Quick View</a>
+					{% endif %}
+					<a href="{% url 'single_product' i.slug %}" class="cart-btn"><i
+							class="fas fa-shopping-cart"></i>Quick View</a>
 				</div>
 			</div>
 			{% endfor %}
@@ -98,9 +130,10 @@
 <!-- end product section -->
 
 <!-- cart banner section -->
+{% for i in offers %}
+{% if i.is_time_limited %}
 <section class="cart-banner pt-100 pb-100">
 	<div class="container">
-		{% for i in offers %}
 		<div class="row clearfix">
 			<!--Image Column-->
 			<div class="image-column col-lg-6">
@@ -137,12 +170,14 @@
 						</div>
 					</div>
 				</div>
-				<a href="{% url 'single_product' i.slug %}" class="cart-btn mt-3"><i class="fa-sharp fa-solid fa-eye"></i></i>Quick View</a>
+				<a href="{% url 'single_product' i.slug %}" class="cart-btn mt-3"><i
+						class="fa-sharp fa-solid fa-eye"></i></i>Quick View</a>
 			</div>
 		</div>
-		{% endfor %}
 	</div>
 </section>
+{% endif %}
+{% endfor %}
 <!-- end cart banner section -->
 
 <!-- testimonail-section -->
@@ -329,19 +364,19 @@
 			<div class="col-lg-12">
 				<div class="logo-carousel-inner">
 					<div class="single-logo-item">
-						<img src="{'% static 'assets/img/company-logos/1.png' %}" alt="">
+						<img src="{% static 'assets/img/company-logos/1.png' %}" alt="">
 					</div>
 					<div class="single-logo-item">
-						<img src="{'% static 'assets/img/company-logos/2.png' %}" alt="">
+						<img src="{% static 'assets/img/company-logos/2.png' %}" alt="">
 					</div>
 					<div class="single-logo-item">
-						<img src="{'% static 'assets/img/company-logos/3.png' %}" alt="">
+						<img src="{% static 'assets/img/company-logos/3.png' %}" alt="">
 					</div>
 					<div class="single-logo-item">
-						<img src="{'% static 'assets/img/company-logos/4.png' %}" alt="">
+						<img src="{% static 'assets/img/company-logos/4.png' %}" alt="">
 					</div>
 					<div class="single-logo-item">
-						<img src="{'% static 'assets/img/company-logos/5.png' %}" alt="">
+						<img src="{% static 'assets/img/company-logos/5.png' %}" alt="">
 					</div>
 				</div>
 			</div>

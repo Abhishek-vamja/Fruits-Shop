@@ -6,9 +6,11 @@ import math
 from django.views.generic import View
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseRedirect
+from django.contrib import messages
 from datetime import datetime, timedelta
 from shop.models import (
-    Category, Product , Cart, Checkout, OrderPlaced, OfferProduct
+    Category, Product , Cart, Checkout, OrderPlaced
     )
 
 class HomeView(LoginRequiredMixin, View):
@@ -17,15 +19,10 @@ class HomeView(LoginRequiredMixin, View):
     """
     def get(self, request):
         all_products = Product.objects.all()
-        offer_product = OfferProduct.objects.all()
-
-        current_date = datetime.now()
-        OfferProduct.objects.filter(date=current_date.strftime('%Y/%m/%d')).delete()
-        
 
         context = {
             'all_products': all_products,
-            'offers': offer_product,
+            'offers': all_products,
         }
         return render(request, 'index.html', context)
 
@@ -110,9 +107,14 @@ class AddToCart(LoginRequiredMixin, View):
     def post(self, request, product_slug):
         auth_user = request.user       
         product = Product.objects.get(slug=product_slug)
-        Cart(user=auth_user,product=product).save()
-
-        return redirect('cart')
+        cart = Cart.objects.filter(user=auth_user, product=product).first()
+        if cart:
+            messages.info(request, "Already in ")
+        else:        
+            Cart(user=auth_user,product=product).save()
+            return redirect('cart')
+        
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 
 class CartVIew(LoginRequiredMixin, View):
@@ -236,8 +238,11 @@ class OrderView(LoginRequiredMixin, View):
 
         amount = 0
         for i in order:
-            if i.paid == False:    
-                value = i.product.price * i.quantity
+            if i.paid == False:
+                if i.product.is_time_limited:
+                    value = i.product.discount_price * i.quantity
+                else:
+                    value = i.product.price * i.quantity
                 amount = amount + value
     
         context = {

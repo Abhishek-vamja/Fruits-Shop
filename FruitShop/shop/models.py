@@ -20,6 +20,11 @@ class Category(BaseModel):
     def __str__(self) -> str:
         return self.title
 
+DEAL_OF = (
+    ('Day', 'Day'),
+    ('Month', 'Month'),
+    ('Year', 'Year')
+)
 
 class Product(BaseModel):
     """Product objects."""   
@@ -31,9 +36,11 @@ class Product(BaseModel):
     available = models.BooleanField(default=True)
     slug = models.SlugField()
 
-    percent_off = models.CharField(max_length=10, null=True)
+    percent_off = models.CharField(max_length=10, null=True, blank=True)
     is_time_limited = models.BooleanField(default=False)
-    discount_price = models.FloatField(null=True)
+    discount_price = models.FloatField(null=True, blank=True)
+    deal_of = models.CharField(max_length=255, choices=DEAL_OF, default='Month')
+    date = models.CharField(max_length=255, null=True, blank=True)
 
     class Meta:
         ordering = ['-created_at']
@@ -41,20 +48,6 @@ class Product(BaseModel):
     def __str__(self):
         return '{}, {}'.format(self.title,self.category)
 
-
-DEAL_OF = (
-    ('Day', 'Day'),
-    ('Month', 'Month'),
-    ('Year', 'Year')
-)
-
-class OfferProduct(Product):
-    """Limited time offer."""
-    deal_of = models.CharField(max_length=255, choices=DEAL_OF, default='Month')
-    date = models.CharField(max_length=255, null=True)
-
-    def __str__(self):
-        return str(self.title)
 
 class Cart(BaseModel):
     """Cart objects."""
