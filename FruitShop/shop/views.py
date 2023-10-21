@@ -52,6 +52,12 @@ class AboutView(View):
         return render(request, 'about.html')
 
 
+class ContactUsView(View):
+    """Contact page view."""
+    def get(self, request):
+        return render(request, 'contact.html')
+
+
 class ShopView(LoginRequiredMixin, View):
     """
     Shop items view.
@@ -59,7 +65,7 @@ class ShopView(LoginRequiredMixin, View):
     def get(self, request):
         all_products = Product.objects.all().order_by('-id')
         all_category = Category.objects.all().order_by('-id')
-        
+
         """
         Pagination logic.
         """

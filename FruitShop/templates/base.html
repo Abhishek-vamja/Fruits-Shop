@@ -55,7 +55,7 @@
                     <div class="main-menu-wrap">
                         <!-- logo -->
                         <div class="site-logo">
-                            <a href="/">
+                            <a href="/shop/">
                                 <img src="{% static 'assets/img/logo.png' %}" alt="">
                             </a>
                         </div>
@@ -68,7 +68,7 @@
                                 <li><a href="/shop/about/">About</a></li>
                                 <li><a href="/news/">News</a></li>
                                 <li><a href="/shop/contact/">Contact</a></li>
-                                <li><a href="#">Shop</a>
+                                <li><a href="">Shop</a>
                                     <ul class="sub-menu">
                                         <li><a href="/shop/items/">Shop</a></li>
                                         <li><a href="/shop/cart/">Cart</a></li>
@@ -78,13 +78,13 @@
                                     <div class="header-icons">
                                         <a class="shopping-cart" href="/shop/cart/"><i
                                                 class="fas fa-shopping-cart"></i></a>
-                                        <a class="mobile-hide search-bar-icon" href="#"><i
+                                        <a class="mobile-hide search-bar-icon" href=""><i
                                                 class="fas fa-search"></i></a>
                                     </div>
                                 </li>
                             </ul>
                         </nav>
-                        <a class="mobile-show search-bar-icon" href="#"><i class="fas fa-search"></i></a>
+                        <a class="mobile-show search-bar-icon" href=""><i class="fas fa-search"></i></a>
                         <div class="mobile-menu"></div>
                         <!-- menu end -->
                     </div>
@@ -104,7 +104,7 @@
                         <div class="search-bar-tablecell">
                             <h3>Search For:</h3>
                             <form method="get" action="{% url 'search' %}">
-                                <input type="text" name="q" placeholder="Keywords">
+                                <samp><input type="text" name="q" placeholder="Type hear"></samp>
                                 <button type="submit">Search <i class="fas fa-search"></i></button>
                             </form>
                         </div>
