@@ -5,12 +5,29 @@ Views for shop app.
 import math
 from django.contrib import messages
 from django.views.generic import View
+from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from shop.models import (
     Category, Product , Cart, Checkout, OrderPlaced
     )
+
+class SearchView(View):
+    def get(self,request):
+        """
+        Search filter.
+        """
+        query = request.GET.get('q', '')  # Get the search query from the URL parameter
+        results = Product.objects.filter(
+            Q(title__icontains=query) | Q(category__title__icontains=query)
+        )
+
+        context = {
+            'query': query,
+            'results': results,
+        }
+        return render(request, 'search_results.html', context)
 
 
 class HomeView(LoginRequiredMixin, View):
