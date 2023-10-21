@@ -3,15 +3,15 @@ Views for shop app.
 """
 
 import math
+from django.contrib import messages
 from django.views.generic import View
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseRedirect
-from django.contrib import messages
-from datetime import datetime, timedelta
 from shop.models import (
     Category, Product , Cart, Checkout, OrderPlaced
     )
+
 
 class HomeView(LoginRequiredMixin, View):
     """
