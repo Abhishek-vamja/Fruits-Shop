@@ -59,6 +59,7 @@ class ShopView(LoginRequiredMixin, View):
     def get(self, request):
         all_products = Product.objects.all().order_by('-id')
         all_category = Category.objects.all().order_by('-id')
+        
         """
         Pagination logic.
         """
@@ -102,7 +103,7 @@ class ShopView(LoginRequiredMixin, View):
 
         return render(request, 'shop.html', context)
 
-    """Listing only fruits."""
+    """Listing separate items."""
     def get_separate_category_list(request, category_slug):
 
         category_slug_to_retrieve = category_slug
