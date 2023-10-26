@@ -108,3 +108,17 @@ class OrderPlaced(BaseModel):
     
     def __str__(self) -> str:
         return f"Order {self.id} by {self.user}"
+
+
+# class Coupon(BaseModel):
+#     """
+#     Coupon objects.
+#     """
+#     code = models.CharField(max_length=15, unique=True)
+#     discount_value = models.DecimalField(max_digits=10, decimal_places=2)
+#     valid_from = models.DateTimeField(auto_now_add=True)
+#     valid_to = models.DateTimeField()
+#     used = models.BooleanField(default=False)
+
+#     def __str__(self) -> str:
+#         return f"Coupon Code {self.code}"

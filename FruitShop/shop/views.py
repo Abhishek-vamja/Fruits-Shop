@@ -3,9 +3,9 @@ Views for shop app.
 """
 
 import math
+from django.db.models import Q
 from django.contrib import messages
 from django.views.generic import View
-from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -196,6 +196,32 @@ class CartVIew(LoginRequiredMixin, View):
             'total_amount': total
         }
         return render(request, 'cart.html', context)
+
+    # def apply_coupon(self,request):
+    #     """Coupon for discount."""
+    #     if request.method == 'POST':
+    #         coupon_code = request.POST.get('coupon_code')
+    #         try:
+    #             coupon = Coupon.objects.get(code=coupon_code)
+    #         except Coupon.DoesNotExist:
+    #             messages.error(request, 'Invalid coupon code.')
+    #             return redirect('cart')
+            
+    #         discount = coupon.discount_value
+    #         cart = Cart.objects.filter(user=self.request.user).order_by('-id').distinct()
+
+    #         amount = 0
+    #         shipping = 45
+    #         for i in cart:
+    #             if i.product.is_time_limited:
+    #                 value = i.quantity * i.product.discount_price
+    #             else:
+    #                 value = i.quantity * i.product.price
+    #             amount = amount + value
+    #         total = amount + shipping         
+    #         total -= discount
+
+
 
     def remove_from_cart(request, cart_id):
         """Remove cart items."""
