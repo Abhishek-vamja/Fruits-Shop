@@ -3,6 +3,8 @@ Models for users.
 """
 
 from django.db import models
+from django.conf import settings
+from core.models import BaseModel
 from django.contrib.auth.models import (
     AbstractBaseUser , PermissionsMixin , BaseUserManager
     )
@@ -43,3 +45,13 @@ class User(AbstractBaseUser,PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
+
+
+class Profile(BaseModel):
+    """User profile."""
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+    mobile = models.CharField(max_length=20)
+    otp = models.CharField(max_length=4)
+
+    def __str__(self) -> str:
+        return str(self.user)

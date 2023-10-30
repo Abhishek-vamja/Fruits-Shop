@@ -38,7 +38,8 @@
 							{% load custom_filters %}
 							<tr class="table-body-row">
 								<td class="product-remove"><a href="{% url 'remove_from_cart' i.id %}"><button
-											type="button" class="btn btn-outline-secondary" style="margin: 5px;">X</button></a>
+											type="button" class="btn btn-outline-secondary"
+											style="margin: 5px;">X</button></a>
 								</td>
 								<td class="product-image"><img src="{{i.product.image.url}}" alt=""></td>
 								<td class="product-name">{{i.product.title}}</td>
@@ -84,11 +85,16 @@
 							</tr>
 							<tr class="total-data">
 								<td><strong>Shipping: </strong></td>
-								<td>${{shipping_amount}}</td>
+								<td style="color: green;"><samp>+</samp>${{shipping_amount}}</td>
+							</tr>
+
+							<tr class="total-data">
+								<td><strong>Coupon: </strong></td>
+								<td style="color: red;"><samp>-</samp>$120</td>
 							</tr>
 							<tr class="total-data">
 								<td><strong>Total: </strong></td>
-								<td>${{total_amount}}</td>
+								<td style="color: green;">${{total_amount}}</td>
 							</tr>
 						</tbody>
 					</table>
@@ -100,10 +106,16 @@
 
 				<div class="coupon-section">
 					<h3>Apply Coupon</h3>
+					{% for i in messages%}
+					<div class="alert alert-{{i.tags}}" role="alert">
+						{{i}}						
+					</div>
+					{% endfor %}
 					<div class="coupon-form-wrap">
 						<form action="">
-							<p><input type="text" name="coupon_code" placeholder="Coupon"></p>
-							<p><button type="submit">Apply</button></p>
+							
+							<p><input type="text" name="coupon_code" placeholder="Enter coupon code."></p>
+							<p><button type="submit" class="btn btn-primary">Apply</button></p>
 						</form>
 					</div>
 				</div>

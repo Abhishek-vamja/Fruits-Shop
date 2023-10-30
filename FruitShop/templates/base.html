@@ -64,6 +64,11 @@
                         <!-- menu start -->
                         <nav class="main-menu">
                             <ul>
+                                {% if user.is_authenticated %}
+                                <li>{{user.get_username}}</li>
+                                {% else %}
+                                <li><a href="{% url 'login' %}">Login</a></li>
+                                {% endif %}
                                 <li class="current-list-item"><a href="/shop/">Home</a></li>
                                 <li><a href="/shop/about/">About</a></li>
                                 <li><a href="/news/">News</a></li>
@@ -72,6 +77,7 @@
                                     <ul class="sub-menu">
                                         <li><a href="/shop/items/">Shop</a></li>
                                         <li><a href="/shop/cart/">Cart</a></li>
+                                        <li><a href="/user/logout/">Logout</a></li>
                                     </ul>
                                 </li>
                                 <li>

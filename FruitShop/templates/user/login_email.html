@@ -1,0 +1,32 @@
+{% extends "user/base.html" %}
+{% block content %}
+
+
+
+<div class="container mt-5 pt-4">
+    
+    <div class="col-6 mx-auto">
+        <h3 class="text-center">Login</h3>
+        <form method="post" action="/user/login-email/">
+            {% csrf_token %}
+            <div class="row">
+                <div class="form-group col-12">
+                    <input type="email" placeholder="Email" class="form-control" name="email" id="">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-12">
+                    <input type="password" placeholder="Password" class="form-control" name="password" id="">
+                </div>
+            </div>
+            <hr>
+            <p>Login with <a href="{% url 'login' %}">Otp</a></p>
+            <p>Don't have account <a href="{% url 'register' %}">Register</a></p>
+            <button class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+
+</div>
+
+
+{% endblock %}

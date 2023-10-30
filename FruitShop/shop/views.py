@@ -3,6 +3,7 @@ Views for shop app.
 """
 
 import math
+from datetime import datetime
 from django.db.models import Q
 from django.contrib import messages
 from django.views.generic import View
@@ -10,7 +11,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from shop.models import (
-    Category, Product , Cart, Checkout, OrderPlaced
+    Category, Product , Cart, Checkout, OrderPlaced, Coupon
     )
 
 class SearchView(View):
@@ -30,7 +31,7 @@ class SearchView(View):
         return render(request, 'search_results.html', context)
 
 
-class HomeView(LoginRequiredMixin, View):
+class HomeView(View):
     """
     Home page view.
     """
@@ -176,52 +177,17 @@ class CartVIew(LoginRequiredMixin, View):
         auth_user = request.user
         cart_items = Cart.objects.filter(user=auth_user)
 
-        carts = Cart.objects.all()
-        cart = carts.filter(user=self.request.user).order_by('-id').distinct()
-
-        amount = 0
+        amount = sum(self.calculate_item_total(item) for item in cart_items)
         shipping = 45
-        for i in cart:
-            if i.product.is_time_limited:
-                value = i.quantity * i.product.discount_price
-            else:
-                value = i.quantity * i.product.price
-            amount = amount + value
         total = amount + shipping
 
         context = {
             'cart_items': cart_items,
             'shipping_amount': shipping,
             'cart_amount': amount,
-            'total_amount': total
+            'total_amount': total,
         }
         return render(request, 'cart.html', context)
-
-    # def apply_coupon(self,request):
-    #     """Coupon for discount."""
-    #     if request.method == 'POST':
-    #         coupon_code = request.POST.get('coupon_code')
-    #         try:
-    #             coupon = Coupon.objects.get(code=coupon_code)
-    #         except Coupon.DoesNotExist:
-    #             messages.error(request, 'Invalid coupon code.')
-    #             return redirect('cart')
-            
-    #         discount = coupon.discount_value
-    #         cart = Cart.objects.filter(user=self.request.user).order_by('-id').distinct()
-
-    #         amount = 0
-    #         shipping = 45
-    #         for i in cart:
-    #             if i.product.is_time_limited:
-    #                 value = i.quantity * i.product.discount_price
-    #             else:
-    #                 value = i.quantity * i.product.price
-    #             amount = amount + value
-    #         total = amount + shipping         
-    #         total -= discount
-
-
 
     def remove_from_cart(request, cart_id):
         """Remove cart items."""
@@ -249,7 +215,13 @@ class CartVIew(LoginRequiredMixin, View):
             print(e,'aaaaaa')
 
         return redirect('cart')
-    
+
+    def calculate_item_total(self, cart_item):
+        if cart_item.product.is_time_limited:
+            return cart_item.quantity * cart_item.product.discount_price
+        else:
+            return cart_item.quantity * cart_item.product.price
+
 
 class CheckoutView(LoginRequiredMixin, View):
     """
