@@ -141,7 +141,7 @@
 					<div class="price-box">
 						<div class="inner-price">
 							<span class="price">
-								<strong>30%</strong> <br> off per kg
+								<strong>{{i.percent_off}}%</strong> <br> off per kg
 							</span>
 						</div>
 					</div>
@@ -188,7 +188,7 @@
 				<div class="testimonial-sliders">
 					<div class="single-testimonial-slider">
 						<div class="client-avater">
-							<img src="{'% static 'assets/img/avaters/avatar1.png' %}" alt="">
+							<img src="{% static 'assets/img/avaters/avatar1.png' %}" alt="">
 						</div>
 						<div class="client-meta">
 							<h3>Saira Hakim <span>Local shop owner</span></h3>
@@ -204,7 +204,7 @@
 					</div>
 					<div class="single-testimonial-slider">
 						<div class="client-avater">
-							<img src="{'% static 'assets/img/avaters/avatar2.png' %}" alt="">
+							<img src="{% static 'assets/img/avaters/avatar2.png' %}" alt="">
 						</div>
 						<div class="client-meta">
 							<h3>David Niph <span>Local shop owner</span></h3>
@@ -220,7 +220,7 @@
 					</div>
 					<div class="single-testimonial-slider">
 						<div class="client-avater">
-							<img src="{'% static 'assets/img/avaters/avatar3.png' %}" alt="">
+							<img src="{% static 'assets/img/avaters/avatar3.png' %}" alt="">
 						</div>
 						<div class="client-meta">
 							<h3>Jacob Sikim <span>Local shop owner</span></h3>
@@ -260,7 +260,7 @@
 						interdum velit. Nam eu molestie lorem.</p>
 					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente facilis illo repellat
 						veritatis minus, et labore minima mollitia qui ducimus.</p>
-					<a href="about.html" class="boxed-btn mt-4">know more</a>
+					<a href="/shop/about/" class="boxed-btn mt-4">know more</a>
 				</div>
 			</div>
 		</div>
@@ -273,7 +273,7 @@
 	<div class="container">
 		<h3>December sale is on! <br> with big <span class="orange-text">Discount...</span></h3>
 		<div class="sale-percent"><span>Sale! <br> Upto</span>50% <span>off</span></div>
-		<a href="shop.html" class="cart-btn btn-lg">Shop Now</a>
+		<a href="/shop/" class="cart-btn btn-lg">Shop Now</a>
 	</div>
 </section>
 <!-- end shop banner -->

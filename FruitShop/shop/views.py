@@ -14,6 +14,7 @@ from shop.models import (
     Category, Product , Cart, Checkout, OrderPlaced, Coupon
     )
 
+
 class SearchView(View):
     def get(self,request):
         """
@@ -38,11 +39,32 @@ class HomeView(View):
     def get(self, request):
         all_products = Product.objects.all()
 
+        """Offer product."""
+        prod_id = None
+        for i in all_products:
+            if i.is_time_limited:
+                print(i.title)
+                prod_id = i.id
+                self.limited_time_product(prod_id)
+
         context = {
             'all_products': all_products,
             'offers': all_products,
         }
         return render(request, 'index.html', context)
+
+    def limited_time_product(request,product_id):
+        """Handle limited time products."""
+        limited_prod = Product.objects.filter(id=product_id)
+        current_date = datetime.now()
+        for i in limited_prod:
+            if i.is_time_limited:
+                if current_date.strftime("%Y/%m/%d") >= i.date:
+                    i.percent_off = None
+                    i.is_time_limited = False
+                    i.discount_price = None
+                    i.date = None
+                    i.save()
 
 
 class AboutView(View):
@@ -59,7 +81,7 @@ class ContactUsView(View):
         return render(request, 'contact.html')
 
 
-class ShopView(LoginRequiredMixin, View):
+class ShopView(View):
     """
     Shop items view.
     """
@@ -137,7 +159,7 @@ class ShopView(LoginRequiredMixin, View):
         return render(request, 'separate_cat.html', context)
 
 
-class SingleProductView(LoginRequiredMixin, View):
+class SingleProductView(View):
     """
     Single product view.
     """
