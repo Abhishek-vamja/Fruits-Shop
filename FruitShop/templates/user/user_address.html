@@ -48,8 +48,7 @@
                     {% if i.default %}
                     <div class="card-header"><small style="margin: 45px;">Default: <img
                                 src="{% static 'assets/img/logo.png' %}" width="80px" height="25px"></small></div>
-                    {% else %}
-                    <div class="card-header"><small style="margin: 45px;">Primary</small></div>
+
                     {% endif %}
                     <div class="card-body text-secondary">
 
@@ -64,7 +63,7 @@
                             Mobile number: {{i.mobile}}
                         </address>
                         </p>
-                        <small><a href="">Edit</a> | <a href="{% url 'remove-address' i.id %}">Remove</a></small>
+                        <small><a href="">Edit</a> | <a href="{% url 'remove-address' i.id %}">Remove</a>{% if i.default %} {% else %} | <a href="{% url 'make-default' i.id %}">Set as default</a>{% endif %}</small>
                     </div>
                 </div>
             </div>

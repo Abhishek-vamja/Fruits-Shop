@@ -189,12 +189,30 @@ def add_user_address(request):
     
     return render(request, 'user/user_add_address.html', locals())
 
+def make_default_address(request,address_id):
+    """Make default address"""
+    try:
+        address_to_set_default = Address.objects.get(id=address_id)
+        address_to_set_default.default = True
+        address_to_set_default.save()
+
+        """
+        Set all other addresses as non-default.
+        """
+        Address.objects.exclude(id=address_id).update(default=False)
+        messages.success(request, 'Changed default address successfully!!')
+        return redirect('user-address')
+    except Address.DoesNotExist:
+        
+        print('EEEEEEEE')    
+
 def remove_user_address(request, address_id):
     """Remove user address."""
     address = Address.objects.get(id=address_id)
     address.delete()
     messages.success(request ,'Remove address successfully!!')
     return redirect('user-address')
+
 
 def get_time_of_day_greeting():
     now = datetime.now()

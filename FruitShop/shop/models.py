@@ -76,6 +76,9 @@ class Address(BaseModel):
     country = models.CharField(max_length=255, default="")
     default = models.BooleanField(default=False)
 
+    class Meta:
+        ordering = ['-default']
+
     def __str__(self) -> str:
         return str(self.user)
 
