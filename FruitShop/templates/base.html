@@ -9,43 +9,9 @@
         content="Responsive Bootstrap4 Shop Template, Created by Imran Hossain from https://imransdesign.com/">
 
     <!-- title -->
-    <title>{% block title %} {% endblock title %}</title>
+    {% block title %}<title></title> {% endblock title %}
     {% load static %}
     <style>
-        .user-icon {
-            position: relative;
-            color: white;
-            display: inline-block;
-            /* Add this to make sure the submenu aligns correctly. */
-        }
-
-        .user-menu {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            background-color: black;
-            border: 1px solid #ccc;
-            display: none;
-        }
-
-        .user-icon:hover .user-menu {
-            display: block;
-        }
-
-        .user-menu ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .user-menu li {
-            padding: 0px;
-        }
-
-        .user-menu a {
-            text-decoration: none;
-            color: #333;
-        }
     </style>
     <!-- favicon -->
     <link rel="shortcut icon" type="image/png" href="{% static 'assets/img/favicon.png' %}">
@@ -100,55 +66,51 @@
                         <!-- menu start -->
                         <nav class="main-menu">
                             <ul>
-                                <li class="current-list-item"><a href="/shop/">Home</a></li>
-                                <li><a href="/shop/about/">About</a></li>
-                                <li><a href="/news/">News</a></li>
-                                <li><a href="/shop/contact/">Contact</a></li>
+                                <li class="current-list-item"><a href="{% url 'index' %}">Home</a></li>
+                                <li><a href="{% url 'about' %}">About</a></li>
+                                <li><a href="{% url 'news' %}">News</a></li>
+                                <li><a href="{% url 'contact-us' %}">Contact</a></li>
                                 <li><a href="">Shop</a>
                                     <ul class="sub-menu">
-                                        <li><a href="/shop/items/">Shop</a></li>
+                                        <li><a href="{% url 'shop' %}">Shop</a></li>
                                         {% if user.is_authenticated %}
-                                        <li><a href="/shop/cart/">Cart</a></li>
-                                        {% endif %}                                    
+                                        <li><a href="{% url 'cart' %}">Cart</a></li>
+                                        {% endif %}
                                     </ul>
                                 </li>
                                 <li>
                                     <div class="header-icons">
                                         {% if user.is_authenticated %}
-                                        <a class="shopping-cart" href="/shop/cart/"><i
+                                        <a class="shopping-cart" href="{% url 'cart' %}"><i
                                                 class="fas fa-shopping-cart"></i></a>
                                         {% endif %}
                                         <a class="mobile-hide search-bar-icon" href="#"><i
                                                 class="fas fa-search"></i></a>
                                         {% if user.is_authenticated %}
-                                        <div class="user-icon">
-                                            <i class="fas fa-user"><span
-                                                    style="margin: 5px;"></span>{{user.name|upper}}</i>
-                                            <div class="user-menu">
-                                                <ul style="align-content: left;">
-                                                    <li><a href="">Profile</a></li>
-                                                    <li><a href="/shop/cart/">Cart</a></li>
-                                                    <li><a href="/settings">Settings</a></li>
-                                                    <li><a href="/user/logout/">Logout</a></li>
-                                                </ul>
-                                            </div>
-                                        </div>
+                                        <a href=""><i class="fas fa-user"><span
+                                                    style="margin: 5px;"></span>{{user.name|upper}}</i></a>
+                                        <ul class="sub-menu">
+                                            <li><a href="{% url 'user-account' %}">Your Account</a></li>
+                                            <li><a href="{% url 'cart' %}">Cart</a></li>
+                                            <li><a href="/settings">Settings</a></li>
+                                            <li><a href="{% url 'logout' %}">Logout</a></li>
                                     </div>
-                                    {% else %}
-                                    <a href="{% url 'login' %}">Login</a>
-                                    <a href="{% url 'register' %}">Register</a>
-                                    {% endif %}
-                                </li>
-
-                            </ul>
-                        </nav>
-                        <a class="mobile-show search-bar-icon" href=""><i class="fas fa-search"></i></a>
-                        <div class="mobile-menu"></div>
-                        <!-- menu end -->
                     </div>
+                    {% else %}
+                    <a href="{% url 'login' %}">Login</a>
+                    <a href="{% url 'register' %}">Register</a>
+                    {% endif %}
+                    </li>
+
+                    </ul>
+                    </nav>
+                    <a class="mobile-show search-bar-icon" href=""><i class="fas fa-search"></i></a>
+                    <div class="mobile-menu"></div>
+                    <!-- menu end -->
                 </div>
             </div>
         </div>
+    </div>
     </div>
     <!-- end header -->
 

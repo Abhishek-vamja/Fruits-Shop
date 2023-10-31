@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block body %}
+{% block title %} <title></title> {% endblock title %}
+{% load static %}
+<!-- breadcrumb-section -->
+<div class="breadcrumb-section breadcrumb-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2 text-center">
+                <div class="breadcrumb-text">
+                    <h1>Your Address</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end breadcrumb section -->
+
+<div style="margin: 50px;">
+    <div class="container">
+        <h4>Your address</h4>
+        <hr>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col">
+                <div class="card border-secondary mb-4 mx-2"
+                    style="max-width: 24rem; min-height: 20rem; border: dashed;">
+                    <!-- <div class="card-header"><small></small></div> -->
+                    <div class="card-body text-secondary">
+                        <a href="">
+                            <h5 class="card-title"
+                                style="display: flex; justify-content: center;margin-top: 85px;font-size: 120px;color: #767676;">
+                                +</h5>
+                            <h5 style="display: flex; justify-content: center; margin-top: 50px; color: gray;">Add
+                                Address</h5>
+                        </a>
+                        <p class="card-text"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card border-secondary mb-4 mx-2" style="max-width: 24rem; min-height: 20rem;">
+                    <div class="card-header"><small style="margin: 45px;">Default: <img
+                                src="{% static 'assets/img/logo.png' %}" width="80px" height="25px"></small></div>
+                    <div class="card-body text-secondary">
+                        {% if user.is_authenticated %}
+                        <h5 class="card-title">{{user.name|title}}</h5>
+                        {% endif %}
+                        <p class="card-text">
+                        <address>
+                            Jalaram no.2 bloc no-16
+                            Hanuman para road,amreli.
+                            AMRELI, GUJARAT 365601
+                            India
+                            Phone number:9265781891
+                        </address>
+                        </p>
+                        <small><a href="">Edit</a> | <a href="">Remove</a></small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock body %}

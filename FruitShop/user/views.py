@@ -1,6 +1,9 @@
 from django.shortcuts import render, redirect
 from django.conf import settings
 from django.contrib.auth import logout, login, authenticate
+from django.views.generic import View
+from datetime import datetime, time
+from django.contrib.auth.mixins import LoginRequiredMixin
 import random
 from user.models import *
 import http.client
@@ -137,3 +140,32 @@ def otp(request):
             
         
     return render(request,'user/verify_otp.html' , context)
+
+
+"""User Profile session."""
+
+def user_account(request):
+    """User detail."""
+    greeting = get_time_of_day_greeting()
+
+    context = {
+        'greeting': greeting
+    }
+    return render(request, 'user/profile.html', context)
+
+
+def user_address(request):
+    """Users Address."""
+    return render(request, 'user/user_address.html')
+
+
+def get_time_of_day_greeting():
+    now = datetime.now()
+    current_time = now.time()
+    
+    if current_time < time(12, 0):
+        return "Good morning"
+    elif current_time < time(17, 0):
+        return "Good afternoon"
+    else:
+        return "Good evening"

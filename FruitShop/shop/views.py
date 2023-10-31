@@ -81,6 +81,12 @@ class ContactUsView(View):
         return render(request, 'contact.html')
 
 
+class NewsView(View):
+    """News page view."""
+    def get(self, request):
+        return render(request, 'news.html')
+
+
 class ShopView(View):
     """
     Shop items view.
