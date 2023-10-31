@@ -3,9 +3,11 @@ from django.conf import settings
 from django.contrib.auth import logout, login, authenticate
 from django.views.generic import View
 from datetime import datetime, time
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 import random
 from user.models import *
+from shop.models import Address
 import http.client
 from django.views.decorators.csrf import csrf_exempt
 
@@ -156,8 +158,43 @@ def user_account(request):
 
 def user_address(request):
     """Users Address."""
-    return render(request, 'user/user_address.html')
+    address = Address.objects.filter(user=request.user)
+    context = {
+        'address': address
+    }
+    return render(request, 'user/user_address.html', context)
 
+
+def add_user_address(request):
+    """Add new address for user."""
+    if request.method == "POST":
+        country = request.POST.get('country')
+        full_name = request.POST.get('full_name')
+        mobile = request.POST.get('mobile')
+        pincode = request.POST.get('pincode')
+        flat =  request.POST.get('flat')
+        area =  request.POST.get('area')
+        landmark = request.POST.get('landmark')
+        city =  request.POST.get('city')
+        state = request.POST.get('state')
+        user = request.user
+
+        address = Address(
+            user=user, full_name=full_name, mobile=mobile,
+            pincode=pincode, flat=flat, area=area,
+            landmark=landmark, city=city, state=state, country=country
+        )
+        address.save()
+        messages.success(request, 'Address added successfully!!')
+    
+    return render(request, 'user/user_add_address.html', locals())
+
+def remove_user_address(request, address_id):
+    """Remove user address."""
+    address = Address.objects.get(id=address_id)
+    address.delete()
+    messages.success(request ,'Remove address successfully!!')
+    return redirect('user-address')
 
 def get_time_of_day_greeting():
     now = datetime.now()

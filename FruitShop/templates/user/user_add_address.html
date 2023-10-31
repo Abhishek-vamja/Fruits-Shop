@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block title %} <title></title> {% endblock title %}
+{% block body %}
+{% load static %}
+<!-- breadcrumb-section -->
+<div class="breadcrumb-section breadcrumb-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2 text-center">
+                <div class="breadcrumb-text">
+                    <h1>Add new Address</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end breadcrumb section -->
+<div class="container d-flex justify-content-center align-items-center" style="margin: 50px;">
+    <div>
+        {% for i in messages %}
+        <div class="alert alert-{{i.tags}}" role="alert">
+            {{i}}
+        </div>
+        {% endfor %}
+        <h4 style="margin-inline: 16px;">Add a new address</h4>
+        <hr style="margin-inline: 16px;">
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="col-md-6 offset-mb-3 mb-3">
+                <label for="exampleFormControlInput1" class="form-label"><b>Country/Region</b></label>
+                <input type="text" class="form-control" name="country" id="exampleFormControlInput1"
+                    style="border-radius: 5px; width: 500px;">
+            </div>
+            <div class="col-md-6 offset-mb-3 mb-3">
+                <label for="exampleFormControlInput1" class="form-label"><b>Full name</b></label>
+                <input type="text" class="form-control" name="full_name" id="exampleFormControlInput1"
+                    style="border-radius: 5px; width: 500px;">
+            </div>
+            <div class="col-md-6 oofset-mb-3 mb-3">
+                <label for="exampleFormControlInput2" class="form-label"><b>Mobile number</b></label>
+                <input type="text" class="form-control" name="mobile" id="exampleFormControlInput2"
+                    style="border-radius: 5px; width: 500px;">
+                <small>May be used to assist delivery</small>
+            </div>
+            <div class="col-md-6 oofset-mb-3 mb-3">
+                <label for="exampleFormControlInput2" class="form-label"><b>Pincode</b></label>
+                <input type="tex5" class="form-control" name="pincode" id="exampleFormControlInput2"
+                    placeholder="6 digits[0-9 PIN code]" style="border-radius: 5px; width: 500px;">
+            </div>
+            <div class="col-md-6 offset-mb-3 mb-3">
+                <label for="exampleFormControlInput1" class="form-label"><b>Flat, House no.,Apartment</b></label>
+                <input type="text" class="form-control" name="flat" id="exampleFormControlInput1"
+                    style="border-radius: 5px; width: 500px;">
+            </div>
+            <div class="col-md-6 offset-mb-3 mb-3">
+                <label for="exampleFormControlInput1" class="form-label"><b>Area, Street, Sector, Village</b></label>
+                <input type="text" class="form-control" name="area" id="exampleFormControlInput1"
+                    style="border-radius: 5px; width: 500px;">
+            </div>
+            <div class="col-md-6 offset-mb-3 mb-3">
+                <label for="exampleFormControlInput1" class="form-label"><b>Landmark</b></label>
+                <input type="text" class="form-control" name="landmark" id="exampleFormControlInput1"
+                    placeholder="E.g. near apollo hospital" style="border-radius: 5px; width: 500px;">
+            </div>
+            <div class="col-md-6 offset-mb-3 mb-3">
+                <label for="exampleFormControlInput1" class="form-label"><b>Town/City</b></label>
+                <input type="text" class="form-control" name="city" id="exampleFormControlInput1"
+                    style="border-radius: 5px; width: 500px;">
+            </div>
+            <div class="col-md-6 offset-mb-3 mb-3">
+                <label for="exampleFormControlInput1" class="form-label"><b>State</b></label>
+                <input type="text" class="form-control" name="state" id="exampleFormControlInput1"
+                    style="border-radius: 5px; width: 500px;">
+            </div>
+            <div class="form-check" style="margin-inline: 16px;">
+                <input class="form-check-input" type="checkbox" name="default" value="" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckDefault">
+                    Make this my default address
+                </label>
+            </div>
+            <button type="submit" class="btn btn-warning" style="margin: 10px; margin-inline: 16px;">Add
+                address</button>
+        </form>
+    </div>
+</div>
+
+{% endblock body %}

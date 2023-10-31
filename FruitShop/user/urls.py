@@ -15,5 +15,7 @@ urlpatterns = [
 
     path('your-account/', user_account, name='user-account'),
     path('your-address/', user_address, name='user-address'),
+    path('new-address/', add_user_address, name='new-address'),
+    path('remove-address/<uuid:address_id>/', remove_user_address, name='remove-address')
     
 ]

@@ -62,6 +62,24 @@ class Cart(BaseModel):
         return str(self.user)
 
 
+class Address(BaseModel):
+    """Address objects."""
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+    full_name = models.CharField(max_length=255)
+    mobile = models.CharField(max_length=10)
+    pincode = models.CharField(max_length=6)
+    flat = models.CharField(max_length=255)
+    area = models.CharField(max_length=255)
+    landmark = models.CharField(max_length=255)
+    city = models.CharField(max_length=255)
+    state = models.CharField(max_length=255)
+    country = models.CharField(max_length=255, default="")
+    default = models.BooleanField(default=False)
+
+    def __str__(self) -> str:
+        return str(self.user)
+
+
 class Checkout(BaseModel):
     """Checkout objects."""
     user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
