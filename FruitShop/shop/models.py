@@ -73,7 +73,7 @@ class Address(BaseModel):
     landmark = models.CharField(max_length=255)
     city = models.CharField(max_length=255)
     state = models.CharField(max_length=255)
-    country = models.CharField(max_length=255, default="")
+    country = models.CharField(max_length=255, default=1)
     default = models.BooleanField(default=False)
 
     class Meta:
@@ -119,6 +119,7 @@ class OrderPlaced(BaseModel):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
+    address = models.ForeignKey(Address, on_delete=models.CASCADE, default="")
     status = models.CharField(max_length=50,choices=STATUS_CHOICE,default='Order Pending')
     paid = models.BooleanField(default=False)
     payment = models.CharField(max_length=255,choices=PAYMENT,default='COD')

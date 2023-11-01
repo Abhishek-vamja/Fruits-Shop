@@ -11,7 +11,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from shop.models import (
-    Category, Product , Cart, Checkout, OrderPlaced, Coupon
+    Category, Product , Cart, Checkout, OrderPlaced, Coupon, Address
     )
 
 
@@ -298,9 +298,10 @@ class CheckoutView(LoginRequiredMixin, View):
         OrderPlaced Process.
         """
         cart = Cart.objects.filter(user=auth_user)
+        address = Address.objects.filter(user=auth_user).first()
         for i in cart:
             OrderPlaced.objects.create(
-                user=auth_user,product=i.product,quantity=i.quantity
+                user=auth_user,product=i.product,quantity=i.quantity,address=address
             )
         checkout.save()
         cart.delete()
