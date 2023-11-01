@@ -63,7 +63,7 @@
                             Mobile number: {{i.mobile}}
                         </address>
                         </p>
-                        <small><a href="">Edit</a> | <a href="{% url 'remove-address' i.id %}">Remove</a>{% if i.default %} {% else %} | <a href="{% url 'make-default' i.id %}">Set as default</a>{% endif %}</small>
+                        <small><a href="{% url 'change-address' i.id %}">Edit</a> | <a href="{% url 'remove-address' i.id %}">Remove</a>{% if i.default %} {% else %} | <a href="{% url 'make-default' i.id %}">Set as default</a>{% endif %}</small>
                     </div>
                 </div>
             </div>
