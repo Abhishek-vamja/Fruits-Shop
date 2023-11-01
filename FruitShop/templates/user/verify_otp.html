@@ -154,7 +154,8 @@
                                     style="background: orange;"><small>Login</small></button>               
                             </div>
                         </div>
-                        <a href="" style="display: flex; justify-content: center;"><small>Resend OTP</small></a>
+                        <input type="hidden" name="mobile" value="{{mobile}}">
+                        <a href="{% url 'resend-otp' %}" style="display: flex; justify-content: center;"><small>Resend OTP</small></a>
                     </form>
                 </div><!--Col 1 End-->
             </div><!--Row 1 End-->

@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from rest_framework.response import Response
 from django.conf import settings
 from django.contrib.auth import logout, login, authenticate
 from django.views.generic import View
@@ -53,11 +54,27 @@ class UserAuth:
             otp = str(random.randint(1000 , 9999))
             user.otp = otp
             user.save()
-            send_otp(mobile , otp)
+            UserAuth.send_otp(mobile , otp)
             request.session['mobile'] = mobile
             return redirect('login_otp')        
         return render(request,'user/login.html')
 
+    # NOT working as expected...
+    def resend_otp(request):
+        if request.method == 'POST':
+            mobile = request.POST.get('mobile')
+            user = Profile.objects.filter(mobile=mobile).first()
+            if user:
+                otp = str(random.randint(1000, 9999))
+                user.otp = otp
+                user.save()
+                UserAuth.send_otp(mobile, otp)
+                request.session['mobile']=mobile
+                return redirect('login_otp')
+            else:
+                return redirect('login_otp')
+            
+        return render(request, 'user/verify_otp.html')
 
     @csrf_exempt
     def login_otp(request):
@@ -78,7 +95,7 @@ class UserAuth:
         return render(request,'user/verify_otp.html' , context)
 
 
-    # Not working properly..
+    # Not working as expected...
     def login_email(request):
         """Login with email and password."""
         if request.method == "POST":
@@ -121,7 +138,7 @@ class UserAuth:
             otp = str(random.randint(1000 , 9999))
             profile = Profile(user = user , mobile=mobile , otp = otp) 
             profile.save()
-            send_otp(mobile, otp)
+            UserAuth.send_otp(mobile, otp)
             request.session['mobile'] = mobile
             return redirect('otp')
         return render(request,'user/register.html')
@@ -195,6 +212,7 @@ class UserAccounts(LoginRequiredMixin):
                 )
                 address.save()
                 messages.success(request, 'Address added successfully!!')
+                return redirect('user-address')
             
             return render(request, 'user/user_add_address.html', locals())
 

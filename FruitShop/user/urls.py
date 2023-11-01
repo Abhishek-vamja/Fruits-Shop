@@ -9,6 +9,7 @@ urlpatterns = [
     path('' , UserAuth.login_attempt , name="login"),
     path('register/' , UserAuth.register , name="register"),
     path('otp/' , UserAuth.otp , name="otp"),
+    path('resend-otp/', UserAuth.resend_otp, name='resend-otp'),
     path('login-otp/', UserAuth.login_otp , name="login_otp"),
     path('login-email/', UserAuth.login_email, name='login-email'),
     path('logout/', UserAuth.user_logout, name='logout'),
