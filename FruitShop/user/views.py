@@ -251,14 +251,14 @@ class UserAccounts(LoginRequiredMixin):
         def make_default_address(request,address_id):
             """Make default address"""
             try:
-                address_to_set_default = Address.objects.get(id=address_id)
+                address_to_set_default = Address.objects.get(user=request.user,id=address_id)
                 address_to_set_default.default = True
                 address_to_set_default.save()
 
                 """
                 Set all other addresses as non-default.
                 """
-                Address.objects.exclude(id=address_id).update(default=False)
+                Address.objects.filter(user=request.user).exclude(id=address_id).update(default=False)
                 messages.success(request, 'Changed default address successfully!!')
                 return redirect('user-address')
             except Address.DoesNotExist:
