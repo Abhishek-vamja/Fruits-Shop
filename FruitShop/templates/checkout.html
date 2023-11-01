@@ -22,74 +22,60 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-lg-8">
-				<div class="checkout-accordion-wrap">
-					<div class="accordion" id="accordionExample">
-						<div class="card single-accordion">
-							<div class="card-header" id="headingOne">
-								<h5 class="mb-0">
-									<button class="btn btn-link" type="button" data-toggle="collapse"
-										data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-										Billing Address
-									</button>
-								</h5>
+				<form action="" method="post">
+					{% csrf_token %}
+					<div class="checkout-accordion-wrap">
+						<div class="accordion" id="accordionExample">
+							<div class="card single-accordion">
+								<div class="card-header" id="headingTwo">
+									<h5 class="mb-0">
+										<button class="btn btn-link collapsed" type="button" data-toggle="collapse"
+											data-target="#collapseTwo" aria-expanded="false"
+											aria-controls="collapseTwo">
+											Shipping Address
+										</button>
+									</h5>
+								</div>
+								<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo"
+									data-parent="#accordionExample">
+									<div class="card-body">
+										<div class="shipping-address-form">
+											{% for i in address %}
+											<p>
+												<label>
+													{% if i.default %}
+														<input type="radio" name="selected_address" value="{{i.id}}" checked>
+														<b>{{i.full_name}}</b>:
+														<br>{{i.flat}},{{i.area}},
+														<br>{{i.city|upper}}, {{i.state}}, {{i.pincode}}
+														<br>{{i.country}},
+														<br>Mobile: {{i.mobile}}
+													{% else %}
+														<input type="radio" name="selected_address" value="{{i.id}}">
+														<b>{{i.full_name}}</b>:
+														<br>{{i.flat}},{{i.area}},
+														<br>{{i.city|upper}}, {{i.state}}, {{i.pincode}}
+														<br>{{i.country}},
+														<br>Mobile: {{i.mobile}}
+													{% endif %}
+												</label>
+											</p>
+											{% endfor %}
+											
+										</div>
+									</div>
+								</div>
 							</div>
+							<div class="alert alert-warning alert-dismissible fade show d-flex justify-content-between" role="alert">
+								<div>
+									<strong>INFO: </strong> If you don't select the address we get <a href="{% url 'user-address' %}">Default Address.</a>
+								</div>
+								<i class="fas fa-times-circle" data-bs-dismiss="alert" aria-label="Close" style='font-size:36px'></i>
+							</div>
+							
+						</div>
 
-							<div id="collapseOne" class="collapse show" aria-labelledby="headingOne"
-								data-parent="#accordionExample">
-								<div class="card-body">
-									<div class="billing-address-form">
-										<form action="{% url 'checkout' %}" method="post">{% csrf_token %}
-											<p><input type="text" name="name" placeholder="Name" required></p>
-											<p><input type="email" name="email" placeholder="Email" required></p>
-											<p><input type="text" name="address" placeholder="Address" required></p>
-											<p><input type="tel" name="phone" placeholder="Phone" required></p>
-											<p><textarea name="bill" id="bill" cols="30" rows="10"
-													placeholder="Say Something" required></textarea></p>
-
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="card single-accordion">
-							<div class="card-header" id="headingTwo">
-								<h5 class="mb-0">
-									<button class="btn btn-link collapsed" type="button" data-toggle="collapse"
-										data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-										Shipping Address
-									</button>
-								</h5>
-							</div>
-							<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo"
-								data-parent="#accordionExample">
-								<div class="card-body">
-									<div class="shipping-address-form">
-										<p>Your shipping address form is here.</p>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="card single-accordion">
-							<div class="card-header" id="headingThree">
-								<h5 class="mb-0">
-									<button class="btn btn-link collapsed" type="button" data-toggle="collapse"
-										data-target="#collapseThree" aria-expanded="false"
-										aria-controls="collapseThree">
-										Card Details
-									</button>
-								</h5>
-							</div>
-							<div id="collapseThree" class="collapse" aria-labelledby="headingThree"
-								data-parent="#accordionExample">
-								<div class="card-body">
-									<div class="card-details">
-										<p>Your card details goes here.</p>
-									</div>
-								</div>
-							</div>
-						</div>
 					</div>
-
-				</div>
 			</div>
 
 			<div class="col-lg-4">
@@ -135,7 +121,8 @@
 							</tr>
 						</tbody>
 					</table>
-					<button type="submit" class="btn btn-danger" style="padding: 10px; margin-top: 20px;">Place Order</button>
+					<button type="submit" class="btn btn-danger" style="padding: 10px; margin-top: 20px;">Place
+						Order</button>
 					</form>
 				</div>
 			</div>
@@ -173,3 +160,12 @@
 <!-- end logo carousel -->
 
 {% endblock %}
+
+{% block js %}
+<script>
+    var alertList = document.querySelectorAll('.alert');
+    alertList.forEach(function (alert) {
+        new bootstrap.Alert(alert);
+    });
+</script>
+{% endblock js %}

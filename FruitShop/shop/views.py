@@ -257,6 +257,7 @@ class CheckoutView(LoginRequiredMixin, View):
     """
     def get(self, request):
         carts = Cart.objects.all()
+        address = Address.objects.filter(user=request.user)
         cart = carts.filter(user=self.request.user).order_by('-id').distinct()
 
         amount = 0
@@ -270,6 +271,7 @@ class CheckoutView(LoginRequiredMixin, View):
         total = amount + shipping
 
         context = {
+            'address': address,
             'total_amount': total,
             'shipping_amount': shipping,
             'carts': cart,
@@ -279,31 +281,21 @@ class CheckoutView(LoginRequiredMixin, View):
     
 
     def post(self, request):
-
-        """
-        Checkout bill address process.
-        """
         auth_user = self.request.user
-        name = request.POST.get('name')
-        email = request.POST.get('email')
-        address = request.POST.get('address')
-        phone = request.POST.get('phone')
-        note = request.POST.get('bill')
-
-        checkout = Checkout(
-            user=auth_user, name=name, email=email, address=address, mobile=phone, note=note
-            )
-        
         """
         OrderPlaced Process.
         """
         cart = Cart.objects.filter(user=auth_user)
-        address = Address.objects.filter(user=auth_user).first()
+        address_select = request.POST.get('selected_address')
+        if address_select: 
+            address = Address.objects.get(id=address_select)
+        else:
+            address = Address.objects.filter(user=auth_user).order_by('-default').first()
+
         for i in cart:
             OrderPlaced.objects.create(
                 user=auth_user,product=i.product,quantity=i.quantity,address=address
             )
-        checkout.save()
         cart.delete()
 
         return redirect('order')
