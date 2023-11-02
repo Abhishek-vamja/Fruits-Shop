@@ -83,22 +83,6 @@ class Address(BaseModel):
         return str(self.user)
 
 
-class Checkout(BaseModel):
-    """Checkout objects."""
-    user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
-    name = models.CharField(max_length=255)
-    email = models.EmailField()
-    address = models.TextField()
-    mobile = models.CharField(max_length=10)
-    note = models.TextField()
-
-    class Meta:
-        ordering = ['-created_at']
-
-    def __str__(self) -> str:
-        return str(self.user)
-
-
 STATUS_CHOICE = (
     ('Order Pending','Order Pending'),
     ('Confirmed','Confirmed'),

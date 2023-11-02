@@ -11,11 +11,14 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from shop.models import (
-    Category, Product , Cart, Checkout, OrderPlaced, Coupon, Address
+    Category, Product , Cart, OrderPlaced, Coupon, Address
     )
 
 
 class SearchView(View):
+    """
+    Search for users.
+    """
     def get(self,request):
         """
         Search filter.

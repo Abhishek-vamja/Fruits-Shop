@@ -1,8 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from rest_framework.response import Response
 from django.conf import settings
 from django.contrib.auth import logout, login, authenticate
-from django.views.generic import View
 from datetime import datetime, time
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -259,6 +257,7 @@ class UserAccounts(LoginRequiredMixin):
                 'obj': address
             }
             return render(request, 'user/user_change_address.html', context)
+
 
         def make_default_address(request,address_id):
             """Make default address"""
