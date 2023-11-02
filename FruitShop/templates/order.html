@@ -54,7 +54,7 @@
                 </div>
                 <div class="col col-lg-2">
                     ORDER:<small>{{i.id}}</small>
-                    <br><a href="">View order details.</a>
+                    <br><a href="{% url 'order-detail' i.id %}">View order details.</a>
                 </div>
             </div>
             <div class="card-body d-flex">

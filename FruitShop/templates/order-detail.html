@@ -1,0 +1,360 @@
+{% extends 'base.html' %}
+{% block title %} <title>Order Details</title> {% endblock title %}
+{% block style %}
+<style>
+    @charset "UTF-8";
+
+    #progress-bar {
+        display: flex;
+        width: 100%;
+        margin: 0;
+        padding: 15px 15px 0;
+        table-layout: fixed;
+        width: 100%;
+        counter-reset: step;
+    }
+
+    #progress-bar li {
+        list-style-type: none;
+        display: table-cell;
+        width: 20%;
+        float: left;
+        font-size: 16px;
+        position: relative;
+        text-align: center;
+    }
+
+    #progress-bar li:before {
+        width: 50px;
+        height: 50px;
+        color: #212121;
+        content: counter(step);
+        counter-increment: step;
+        line-height: 50px;
+        font-size: 18px;
+        border: 1px solid #efefef;
+        display: block;
+        text-align: center;
+        margin: 0 auto 10px auto;
+        border-radius: 50%;
+        background-color: #fff;
+    }
+
+    #progress-bar li:after {
+        width: 100%;
+        height: 10px;
+        content: "";
+        position: absolute;
+        background-color: #fff;
+        top: 25px;
+        left: -50%;
+        z-index: -1;
+    }
+
+    #progress-bar li:first-child:after {
+        content: none;
+    }
+
+    #progress-bar li.step-done {
+        color: #ff0000;
+    }
+
+    #progress-bar li.step-done:before {
+        border-color: #ff0000;
+        background-color: #ff0000;
+        color: #fff;
+        content: "";
+        font-family: "FontAwesome";
+    }
+
+    #progress-bar li.step-done+li:after {
+        background-color: #ff0000;
+    }
+
+    #progress-bar li.step-active {
+        color: #ff0000;
+    }
+
+    #progress-bar li.step-active:before {
+        border-color: #ff0000;
+        color: #00ff04;
+        font-weight: 700;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th,
+    td {
+        border: 1px #dddddd;
+        text-align: left;
+        padding: 4px;
+    }
+
+    .item-description {
+        width: 40%;
+        /* Adjust the width as needed */
+    }
+
+    .item-amount {
+        width: 20%;
+        /* Adjust the width as needed */
+    }
+</style>
+{% endblock style %}
+{% block body %}
+{% load static %}
+
+<!-- breadcrumb-section -->
+<div class="breadcrumb-section breadcrumb-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2 text-center">
+                <div class="breadcrumb-text">
+                    <h1>Your order details.</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end breadcrumb section -->
+{% if order.status == 'Delivered' %}
+<div style="margin: 50px;">
+    <div class="container">
+        <h5>Order Details</h5>
+        <hr>
+        <p>
+            <span>Order on {{order.created_at}} </span> <span style="color: gray;">|</span> <span> ORDER #
+                {{order.id}}</span>
+        </p>
+        <div class="card">
+            <div class="row m-4">
+                <div class="col">
+                    <h5><b>Shipping Address</b></h5>
+                    <address>
+                        {{order.address.full_name}},<br>
+                        {{order.address.flat}},{{order.address.area}},
+                        {{order.address.city}},{{order.address.state}},{{order.address.pincode}},<br>
+                        {{order.address.country}}<br>
+                        Mobile: +91{{order.address.mobile}}
+                    </address>
+                </div>
+                <div class="col-6">
+                    <h5><b>Payment Method</b></h5>
+                    <p>{{order.payment}}</p>
+                </div>
+                <div class="col">
+                    <h5><b>Order Summary</b></h5>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td class="item-description">Item(s) Subtotal:</td>
+                                <td class="item-amount">${{amount}}</td>
+                            </tr>
+                            <tr>
+                                <td class="item-description">Shipping:</td>
+                                <td class="item-amount">${{shipping}}</td>
+                            </tr>
+                            <tr>
+                                <td class="item-description">Total:</td>
+                                <td class="item-amount">${{total}}</td>
+                            </tr>
+                            <tr>
+                                <td class="item-description"><b>Grand Total:</b></td>
+                                <td class="item-amount">$<b>{{total}}</b></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="card mt-3">
+            <div class="cord-header">
+                <div class="card-body d-flex">
+                    <div class="col col-lg-2">
+                        <img src="{{order.product.image.url}}" alt="{{order.product.title}}" width="100" height="100">
+                    </div>
+                    <div class="col">
+                        <h5 class="card-title">{{order.product.title}}</h5>
+                        <p class="card-text">Quantity: {{order.quantity}}</p>
+                        <p class="card-text">{{order.product.description}}</p>
+                        <a href="" class="btn btn-warning" style="background-color: white;
+                    border-radius: 6px; border: none;
+                    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">View your item</a>
+                    </div>
+                    <div class="col col-lg-3">
+                        <a href="" class="btn btn-danger"><span>Write a product review</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% else %}
+
+<div style="margin: 50px;">
+    <div class="container">
+        <h5>Order Details</h5>
+        <hr>
+        <p>
+            <span>Order on {{order.created_at}} </span> <span style="color: gray;">|</span> <span> ORDER #
+                {{order.id}}</span>
+        </p>
+        <div class="card">
+            <div class="row m-4">
+                <div class="col">
+                    <h5><b>Shipping Address</b></h5>
+                    <address>
+                        {{order.address.full_name}},<br>
+                        {{order.address.flat}},{{order.address.area}},
+                        {{order.address.city}},{{order.address.state}},{{order.address.pincode}},<br>
+                        {{order.address.country}}<br>
+                        Mobile: +91{{order.address.mobile}}
+                    </address>
+                </div>
+                <div class="col-6">
+                    <h5><b>Payment Method</b></h5>
+                    <p>{{order.payment}}</p>
+                </div>
+                <div class="col">
+                    <h5><b>Order Summary</b></h5>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td class="item-description">Item(s) Subtotal:</td>
+                                <td class="item-amount">${{amount}}</td>
+                            </tr>
+                            <tr>
+                                <td class="item-description">Shipping:</td>
+                                <td class="item-amount">${{shipping}}</td>
+                            </tr>
+                            <tr>
+                                <td class="item-description">Total:</td>
+                                <td class="item-amount">${{total}}</td>
+                            </tr>
+                            <tr>
+                                <td class="item-description"><b>To payed:</b></td>
+                                <td class="item-amount">$<b>{{total}}</b></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="container mt-4">
+            <h5>Order Status</h5>
+            <hr>
+            <ol id="progress-bar">
+                {% if order.payment == 'Online' %}
+                {% if order.status == 'Confirmed' %}
+                <li class="step-done">Confirmed</li>
+                <li class="step-active">Packed</li>
+                <li class="step-todo">Shipped</li>
+                <li class="step-todo">Out of delivery</li>
+                <li class="step-todo">Delivered</li>
+                {% elif order.status == 'Packed' %}
+                <li class="step-done">Confirmed</li>
+                <li class="step-done">Packed</li>
+                <li class="step-active">Shipped</li>
+                <li class="step-todo">Out of delivery</li>
+                <li class="step-todo">Delivered</li>
+                {% elif order.status == 'Shipped' %}
+                <li class="step-done">Confirmed</li>
+                <li class="step-done">Packed</li>
+                <li class="step-done">Shipped</li>
+                <li class="step-active">Out of delivery</li>
+                <li class="step-todo">Delivered</li>
+                {% elif order.status == 'Outer Delivery' %}
+                <li class="step-done">Confirmed</li>
+                <li class="step-done">Packed</li>
+                <li class="step-done">Shipped</li>
+                <li class="step-done">Out of delivery</li>
+                <li class="step-active">Delivered</li>
+                {% else %}
+                <li class="step-todo">Confirmed</li>
+                <li class="step-todo">Packed</li>
+                <li class="step-todo">Shipped</li>
+                <li class="step-todo">Out of delivery</li>
+                <li class="step-todo">Delivered</li>
+                {% endif %}
+                {% else %}
+                {% if order.status == 'Confirmed' %}
+                <li class="step-done">Confirmed</li>
+                <li class="step-active">Packed</li>
+                <li class="step-todo">Shipped</li>
+                <li class="step-todo">Out of delivery</li>
+                <li class="step-todo">Payment</li>
+                <li class="step-todo">Delivered</li>
+                {% elif order.status == 'Packed' %}
+                <li class="step-done">Confirmed</li>
+                <li class="step-done">Packed</li>
+                <li class="step-active">Shipped</li>
+                <li class="step-todo">Out of delivery</li>
+                <li class="step-todo">Payment</li>
+                {% elif order.status == 'Shipped' %}
+                <li class="step-done">Confirmed</li>
+                <li class="step-done">Packed</li>
+                <li class="step-done">Shipped</li>
+                <li class="step-active">Out of delivery</li>
+                <li class="step-todo">Payment</li>
+                {% elif order.status == 'Outer Delivery' %}
+                <li class="step-done">Confirmed</li>
+                <li class="step-done">Packed</li>
+                <li class="step-done">Shipped</li>
+                <li class="step-done">Out of delivery</li>
+                <li class="step-active">Payment</li>
+                {% elif order.paid %}
+                <li class="step-done">Confirmed</li>
+                <li class="step-done">Packed</li>
+                <li class="step-done">Shipped</li>
+                <li class="step-done">Out of delivery</li>
+                <li class="step-done">Payment</li>
+                {% elif order.status == 'Delivered' %}
+                {% else %}
+                <li class="step-todo">Confirmed</li>
+                <li class="step-todo">Packed</li>
+                <li class="step-todo">Shipped</li>
+                <li class="step-todo">Out of delivery</li>
+                <li class="step-todo">Payment</li>
+                {% endif %}
+                {% endif %}
+            </ol>
+            <div class="alert alert-warning alert-dismissible fade show d-flex justify-content-between mt-5"
+                role="alert">
+                <div>
+                    {% if order.status == 'Confirmed' %}
+                    <strong>Your order has been Confirmed.</strong>
+                    {% elif order.status == 'Packed' %}
+                    <strong>Your order has been Packed.</strong>
+
+                    {% elif order.status == 'Shipped' %}
+                    <strong>Your order has been Shipped.</strong>
+
+                    {% elif order.status == 'Outer Delivery' %}
+                    <strong>Your order has out to delivery.</strong>
+
+                    {% endif %}
+                </div>
+                <i class="fas fa-times-circle" data-bs-dismiss="alert" aria-label="Close" style='font-size:36px'></i>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+{% endif %}
+
+{% endblock body %}
+
+{% block js %}
+<script>
+    var alertList = document.querySelectorAll('.alert');
+    alertList.forEach(function (alert) {
+        new bootstrap.Alert(alert);
+    });
+</script>
+{% endblock js %}

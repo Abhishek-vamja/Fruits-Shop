@@ -8,7 +8,7 @@ from django.db.models import Q
 from django.contrib import messages
 from django.views.generic import View
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from shop.models import (
     Category, Product , Cart, Checkout, OrderPlaced, Coupon, Address
@@ -301,10 +301,10 @@ class CheckoutView(LoginRequiredMixin, View):
         return redirect('order')
 
 
-class OrderView(LoginRequiredMixin, View):
+class OrderView(LoginRequiredMixin):
     """Order view for users."""
-    def get(self, request):
-        order = OrderPlaced.objects.filter(user=self.request.user)
+    def get_order(request):
+        order = OrderPlaced.objects.filter(user=request.user)
 
         amount = 0
         for i in order:
@@ -322,9 +322,39 @@ class OrderView(LoginRequiredMixin, View):
 
         return render(request, 'order.html', context)
 
+    """Get order details for authenticated users."""
+    def get_order_details(request, order_id):
+        auth_user = request.user
+        order_details = get_object_or_404(OrderPlaced,user=auth_user,id=order_id)
+        order = OrderPlaced.objects.filter(user=auth_user,id=order_id)
 
-    """Delete user order."""
-    def delete_order(request, product_id):
-        prod = OrderPlaced.objects.get(id=product_id)
-        prod.delete()
+        shipping = 45
+        amount = 0
+        for i in order:
+            if i.product.is_time_limited:
+                value = i.product.discount_price * i.quantity
+            else:
+                value = i.product.price * i.quantity
+            amount = amount + value
+
+        # for progress in order:
+
+        #     if progress.status == 'Confirmed':
+        #         active = True
+        #     elif progress.status == 'Packed':
+        #         active = True
+
+        total = amount + shipping
+        context = {
+            'order':order_details,
+            'amount': amount,
+            'shipping': shipping,
+            'total': total
+        }
+        return render(request, 'order-detail.html', context)
+
+    """Delete order for authenticated users."""
+    def delete_order(request, order_id):
+        order = OrderPlaced.objects.get(id=order_id)
+        order.delete()
         return redirect('order')

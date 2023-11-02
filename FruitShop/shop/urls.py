@@ -9,7 +9,7 @@ urlpatterns = [
     path('about/', AboutView.as_view(), name='about'),
     path('contact/', ContactUsView.as_view(), name='contact-us'),
     path('news/', NewsView.as_view(), name='news'),
-    
+
     path('search/', SearchView.as_view(), name='search'),
 
     path('items/', ShopView.as_view(), name='shop'),
@@ -24,6 +24,7 @@ urlpatterns = [
 
     path('checkout/', CheckoutView.as_view(), name='checkout'),
 
-    path('order/', OrderView.as_view(), name='order'),
-    path('delete_order/<str:product_id>/', OrderView.delete_order, name='delete_order')
+    path('order/', OrderView.get_order, name='order'),
+    path('order-detail/<uuid:order_id>/', OrderView.get_order_details, name='order-detail'),
+    path('delete_order/<str:order_id>/', OrderView.delete_order, name='delete_order')
 ]
