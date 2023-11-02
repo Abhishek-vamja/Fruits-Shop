@@ -1,7 +1,47 @@
 {% extends 'base.html' %}
-{% block body %}
 {% block title %} <title>Your Address</title> {% endblock title %}
+{% block style %}
+<style>
+    /* Styles for the custom toast container */
+    .custom-toast-container {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        /* Semi-transparent background overlay */
+        z-index: 1000;
+    }
+
+    /* Styles for the custom toast */
+    .custom-toast {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 400px;
+        /* Set your desired width */
+        background-color: white;
+        color: black;
+        padding: 15px;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Styles for the close button */
+    .close-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+    }
+</style>
+{% endblock style %}
+{% block body %}
 {% load static %}
+
 <!-- breadcrumb-section -->
 <div class="breadcrumb-section breadcrumb-bg">
     <div class="container">
@@ -29,7 +69,6 @@
             <div class="col">
                 <div class="card border-secondary mb-4 mx-2"
                     style="max-width: 24rem; min-height: 20rem; border: dashed;">
-                    <!-- <div class="card-header"><small></small></div> -->
                     <div class="card-body text-secondary">
                         <a href="{% url 'new-address' %}">
                             <h5 class="card-title"
@@ -48,12 +87,9 @@
                     {% if i.default %}
                     <div class="card-header"><small style="margin: 45px;">Default: <img
                                 src="{% static 'assets/img/logo.png' %}" width="80px" height="25px"></small></div>
-
                     {% endif %}
                     <div class="card-body text-secondary">
-
                         <h5 class="card-title">{{i.full_name|title}}</h5>
-
                         <p class="card-text">
                         <address>
                             {{i.area}}, {{i.flat}}
@@ -63,7 +99,39 @@
                             Mobile number: {{i.mobile}}
                         </address>
                         </p>
-                        <small><a href="{% url 'change-address' i.id %}">Edit</a> | <a href="{% url 'remove-address' i.id %}">Remove</a>{% if i.default %} {% else %} | <a href="{% url 'make-default' i.id %}">Set as default</a>{% endif %}</small>
+                        {% if i.default %}
+                        <div class="custom-toast-container">
+                            <div class="custom-toast" id="customToast">
+                                <b>Edit failed</b>
+                                <hr>
+                                <address>
+                                    <b>{{i.full_name}}</b>: <br>
+                                    {{i.area}}, {{i.flat}} <br>
+                                    {{i.landmark}}, <br>
+                                    {{i.city|upper}}, {{i.state}}, {{i.pincode}}<br>
+                                    {{i.country|upper}}.<br>
+                                    Mobile number: {{i.mobile}}
+                                </address>
+                                <hr>
+                                <div class="alert alert-danger" role="alert">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                        This address is used as your residential address for digital purchases. To edit
+                                        this address, first set a different residential address for your digital
+                                        purchases.
+                                </div>
+                                <button class="btn btn-warning" id="closeButton">Cancel</button>
+                                <span class="close-button" id="closeButton2">&times;</span>
+                            </div>
+                        </div>
+                        <small><a id="showCustomToastBtn" style="color: #007bff;">Edit</a>
+                            | <a href="{% url 'remove-address' i.id %}">Remove</a>{% if i.default %} {% else %} | <a
+                                href="{% url 'make-default' i.id %}">Set as default</a>{% endif %}</small>
+                        {% else %}
+                        <small><a href="{% url 'change-address' i.id %}">Edit</a> | <a
+                                href="{% url 'remove-address' i.id %}">Remove</a>{% if i.default %} {% else %} | <a
+                                href="{% url 'make-default' i.id %}">Set as default</a>{% endif %}
+                        </small>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -71,5 +139,26 @@
         </div>
     </div>
 </div>
-
 {% endblock body %}
+{% block js %}
+<script>
+    const showCustomToastBtn = document.getElementById('showCustomToastBtn');
+    const customToastContainer = document.querySelector('.custom-toast-container');
+    const customToast = document.getElementById('customToast');
+    const closeButton = document.getElementById('closeButton');
+    const closeButton2 = document.getElementById('closeButton2');
+
+
+    showCustomToastBtn.addEventListener('click', () => {
+        customToastContainer.style.display = 'block';
+    });
+
+    closeButton.addEventListener('click', () => {
+        customToastContainer.style.display = 'none';
+    });
+
+    closeButton2.addEventListener('click', () => {
+        customToastContainer.style.display = 'none';
+    });
+</script>
+{% endblock %}

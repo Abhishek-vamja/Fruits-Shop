@@ -231,22 +231,34 @@ class UserAccounts(LoginRequiredMixin):
                 landmark = request.POST.get('landmark')
                 city =  request.POST.get('city')
                 state = request.POST.get('state')
+                default_id = request.POST.get('default')
                 user = request.user
 
                 """
                 Update the fields of the address object.
                 """
-                Address.objects.filter(id=address_id).update(
-                    country=country,full_name=full_name,mobile=mobile,pincode=pincode,
-                    flat=flat,area=area,landmark=landmark,city=city,state=state,user=user)
-                messages.success(request, 'Address change successfully!!')
-                return redirect('user-address')
+                if default_id:
+                    set_as_default = Address.objects.get(user=user,id=default_id)
+                    set_as_default.default = True
+                    set_as_default.save()
+
+                    Address.objects.filter(user=user).exclude(id=default_id).update(default=False)
+                    Address.objects.filter(id=default_id).update(
+                        country=country,full_name=full_name,mobile=mobile,pincode=pincode,
+                        flat=flat,area=area,landmark=landmark,city=city,state=state,user=user)
+                    messages.success(request, 'Address change successfully!!')
+                    return redirect('user-address')
+                else:
+                    Address.objects.filter(id=address_id).update(
+                        country=country,full_name=full_name,mobile=mobile,pincode=pincode,
+                        flat=flat,area=area,landmark=landmark,city=city,state=state,user=user)
+                    messages.success(request, 'Address change successfully!!')
+                    return redirect('user-address')
             
             context = {
                 'obj': address
             }
             return render(request, 'user/user_change_address.html', context)
-
 
         def make_default_address(request,address_id):
             """Make default address"""
