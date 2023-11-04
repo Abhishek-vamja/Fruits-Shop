@@ -293,6 +293,7 @@ class UserAccounts(LoginRequiredMixin):
             }
             return render(request , 'user/user_profile.html', context)        
 
+
         def change_user_name(request, user_id):
             """Change user name."""
             profile = get_object_or_404(Profile, id=user_id)

@@ -210,7 +210,9 @@ class CartVIew(LoginRequiredMixin, View):
 
         amount = sum(self.calculate_item_total(item) for item in cart_items)
         shipping = 45
-        total = amount + shipping
+        discount_amount = request.session.get('discount_amount', 0)
+        total = amount + shipping - discount_amount 
+        request.session['total'] = total
 
         context = {
             'cart_items': cart_items,
@@ -219,6 +221,21 @@ class CartVIew(LoginRequiredMixin, View):
             'total_amount': total,
         }
         return render(request, 'cart.html', context)
+
+    def post(self, request):
+        auth_user = request.user
+        cart_items = Cart.objects.filter(user=auth_user)
+        coupon_code = request.POST.get('coupon_code')        
+        valid_coupon = Coupon.objects.filter(code=coupon_code, used=False).first()
+
+        if valid_coupon:
+            request.session['valid_coupon_code'] = valid_coupon.code
+            request.session['discount_amount'] = valid_coupon.discount_value
+            messages.success(request, 'Coupon applied!!')
+        else:
+            messages.warning(request, 'Invalid or already used coupon code.')
+
+        return redirect('cart')
 
     def remove_from_cart(request, cart_id):
         """Remove cart items."""
@@ -271,7 +288,12 @@ class CheckoutView(LoginRequiredMixin, View):
             else:
                 value = i.quantity * i.product.price
             amount = amount + value
-        total = amount + shipping
+        
+        if 'discount_amount' in request.session:
+            total = amount + shipping - request.session['discount_amount']
+            request.session['total'] = total
+        else:
+            total = amount + shipping
 
         context = {
             'address': address,
@@ -296,9 +318,28 @@ class CheckoutView(LoginRequiredMixin, View):
             address = Address.objects.filter(user=auth_user).order_by('-default').first()
 
         for i in cart:
-            OrderPlaced.objects.create(
-                user=auth_user,product=i.product,quantity=i.quantity,address=address
-            )
+            if 'discount_amount' in request.session:
+                OrderPlaced.objects.create(
+                    user=auth_user, product=i.product, quantity=i.quantity, address=address,
+                    price=request.session['total'], discount_price=request.session['discount_amount']
+                )
+            else:
+                OrderPlaced.objects.create(
+                    user=auth_user, product=i.product, quantity=i.quantity, address=address,
+                    price=request.session['total']
+                )
+
+        if 'valid_coupon_code' in request.session:
+            valid_coupon_code = request.session['valid_coupon_code']
+            valid_coupon = Coupon.objects.filter(code=valid_coupon_code, used=False).first()
+            if valid_coupon:
+                valid_coupon.used = True
+                valid_coupon.save()
+
+            del request.session['total']
+            del request.session['valid_coupon_code']
+            del request.session['discount_amount']
+
         cart.delete()
 
         return redirect('order')
@@ -339,20 +380,15 @@ class OrderView(LoginRequiredMixin):
             else:
                 value = i.product.price * i.quantity
             amount = amount + value
+            
+ 
+        discount = amount - order_details.price
 
-        # for progress in order:
-
-        #     if progress.status == 'Confirmed':
-        #         active = True
-        #     elif progress.status == 'Packed':
-        #         active = True
-
-        total = amount + shipping
         context = {
             'order':order_details,
             'amount': amount,
+            'discount': discount,
             'shipping': shipping,
-            'total': total
         }
         return render(request, 'order-detail.html', context)
 

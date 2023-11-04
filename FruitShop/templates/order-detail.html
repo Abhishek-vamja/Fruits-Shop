@@ -157,13 +157,20 @@
                                 <td class="item-description">Shipping:</td>
                                 <td class="item-amount">${{shipping}}</td>
                             </tr>
+                            {% if order.discount_price == 0 %}
+                            {% else %}
+                            <tr>
+                                <td class="item-description">Discount:</td>
+                                <td class="item-amount">${{order.discount_price}}</td>
+                            </tr>
+                            {% endif %}
                             <tr>
                                 <td class="item-description">Total:</td>
-                                <td class="item-amount">${{total}}</td>
+                                <td class="item-amount">${{order.price}}</td>
                             </tr>
                             <tr>
                                 <td class="item-description"><b>Grand Total:</b></td>
-                                <td class="item-amount">$<b>{{total}}</b></td>
+                                <td class="item-amount">$<b>{{order.price}}</b></td>
                             </tr>
                         </tbody>
                     </table>
@@ -231,13 +238,20 @@
                                 <td class="item-description">Shipping:</td>
                                 <td class="item-amount">${{shipping}}</td>
                             </tr>
+                            {% if order.discount_price == 0 %}
+                            {% else %}
+                            <tr>
+                                <td class="item-description">Discount:</td>
+                                <td class="item-amount">${{order.discount_price}}</td>
+                            </tr>
+                            {% endif %}
                             <tr>
                                 <td class="item-description">Total:</td>
-                                <td class="item-amount">${{total}}</td>
+                                <td class="item-amount">${{order.price}}</td>
                             </tr>
                             <tr>
                                 <td class="item-description"><b>To payed:</b></td>
-                                <td class="item-amount">$<b>{{total}}</b></td>
+                                <td class="item-amount">$<b>{{order.price}}</b></td>
                             </tr>
                         </tbody>
                     </table>
