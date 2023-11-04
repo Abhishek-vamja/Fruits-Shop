@@ -28,7 +28,6 @@
             {% csrf_token %}
             <div class="col-md-6 offset-mb-3 mb-3">
                 <label for="exampleFormControlInput1" class="form-label"><b>Country/Region</b></label>
-                <input type="hidden" name="_method" value="PATCH">
                 <input type="text" class="form-control" name="country" value="{{obj.country}}"
                     id="exampleFormControlInput1" style="border-radius: 5px; width: 500px;">
             </div>

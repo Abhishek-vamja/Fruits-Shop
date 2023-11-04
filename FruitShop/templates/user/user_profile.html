@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %} <title>Change Profile</title> {% endblock title %}
+{% block body %}
+{% load static %}
+<!-- breadcrumb-section -->
+<div class="breadcrumb-section breadcrumb-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2 text-center">
+                <div class="breadcrumb-text">
+                    <h1>Change Profile</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end breadcrumb section -->
+
+<div class="container d-flex justify-content-center align-items-center" style="margin: 50px;">
+    <div>
+        {% for i in messages %}
+        <div class="alert alert-{{i.tags}}" role="alert">
+            {{i}}
+        </div>
+        {% endfor %}
+        <h5>Login & Security </h5>
+        <hr>
+        <div class="card" style="width: 800px; border-radius: 15px;">
+            <div class="card-body d-flex justify-content-between">
+                <div class="col-lg-4">
+                    <span><b>Name:</b> <br> {{profile.user.name|title}} </span>
+                </div>
+                <a href="{% url 'change-name' profile.id %}" class="btn btn-warning" style="height: fit-content;">Edit</a>
+            </div>
+        </div>
+        <div class="card" style="width: 800px; border-radius: 15px;">
+            <div class="card-body d-flex justify-content-between">
+                <div class="col-lg-4">
+                    <span><b>Email:</b> <br> {{profile.user.email}} </span>
+                </div>
+                <a href="" class="btn btn-warning" style="height: fit-content;">Edit</a>
+            </div>
+        </div>
+        <div class="card" style="width: 800px; border-radius: 15px;">
+            <div class="card-body d-flex justify-content-between">
+                <div class="col-lg-4">
+                    <span><b>Mobile:</b> <br> +91{{profile.mobile}} </span>
+                </div>
+                <a href="" class="btn btn-warning" style="height: fit-content;">Edit</a>
+            </div>
+        </div>
+        <div class="card" style="width: 800px; border-radius: 15px;">
+            <div class="card-body d-flex justify-content-between">
+                <div class="col-lg-4">
+                    <span><b>Password:</b> <br> ******* </span>
+                </div>
+                <a href="" class="btn btn-warning" style="height: fit-content;">Edit</a>
+            </div>
+        </div>
+        <a href="{% url 'user-account' %}" class="btn btn-warning mt-3" style="border-radius: 12px;">Done</a>
+    </div>
+</div>
+
+{% endblock body %}

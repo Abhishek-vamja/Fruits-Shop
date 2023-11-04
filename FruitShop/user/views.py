@@ -172,7 +172,6 @@ class UserAccounts(LoginRequiredMixin):
     def user_account(request):
         """User detail."""
         greeting = get_time_of_day_greeting()
-
         context = {
             'greeting': greeting
         }
@@ -283,6 +282,34 @@ class UserAccounts(LoginRequiredMixin):
             address.delete()
             messages.success(request ,'Remove address successfully!!')
             return redirect('user-address')
+
+    class UserProfile:
+        """Handle user profile."""
+        def get_user_profile(request):
+            """Change user profile as needed."""
+            user_profile = Profile.objects.get(user=request.user)
+            context = {
+                'profile': user_profile
+            }
+            return render(request , 'user/user_profile.html', context)        
+
+        def change_user_name(request, user_id):
+            """Change user name."""
+            profile = get_object_or_404(Profile, id=user_id)
+
+            if request.method == 'POST':              
+                user_name = request.POST.get('name')                
+                profile.user.name = user_name
+                profile.user.save()
+                
+                messages.success(request, 'Name changed!!')
+                return redirect('user-profile')
+            
+            context = {
+                'profile': profile
+            }
+
+            return render(request, 'user/change_name.html', context)
 
 
 def get_time_of_day_greeting():

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %} <title>Change Name</title> {% endblock title %}
+{% block body %}
+{% load static %}
+<!-- breadcrumb-section -->
+<div class="breadcrumb-section breadcrumb-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2 text-center">
+                <div class="breadcrumb-text">
+                    <h1>Change Name</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end breadcrumb section -->
+
+<div class="container d-flex justify-content-center align-items-center" style="margin: 50px;">
+    <div>
+        <h4>Change Your Name</h4>
+        <hr>
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="card" style="width: 50rem;">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-4 text-muted">If you want to change the name associated with your Amazon
+                        customer account, you may do so below. Be sure to click the <b>Save Changes</b> button when you are
+                        done.</h6>
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label"> <b>New Name</b></label>
+                        <input type="text" class="form-control" name="name" value="{{profile.user.name}}" id="exampleFormControlInput1" style="width: fit-content;">
+                    </div>
+                    <button type="submit" class="btn btn-warning">Save change</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock body %}

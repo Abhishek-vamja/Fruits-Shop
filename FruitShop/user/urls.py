@@ -19,12 +19,11 @@ urlpatterns = [
     path('your-account/', UserAccounts.user_account, name='user-account'),
     
     # USER ACCOUNT >> USER ORDERS...
-    # Make Soon..
-
+    # Made in shop urls..
 
     # USER ACCOUNT >> LOGIN & SECURITY...
-    # Make Soon..
-
+    path('user-profile/', UserAccounts.UserProfile.get_user_profile, name='user-profile'),
+    path('user-profile/change-name/<uuid:user_id>/', UserAccounts.UserProfile.change_user_name, name='change-name'),
 
     # USER ACCOUNT >> USER ADDRESS...
     path('your-address/', UserAccounts.UserAddress.user_address, name='user-address'),
@@ -33,7 +32,6 @@ urlpatterns = [
     path('make-default/<uuid:address_id>/', UserAccounts.UserAddress.make_default_address, name='make-default'),
     path('remove-address/<uuid:address_id>/', UserAccounts.UserAddress.remove_user_address, name='remove-address')
     
-
     # USER ACCOUNT >> CONTACT...
     # Make Soon..
 ]
