@@ -207,7 +207,13 @@ class UserAccounts(LoginRequiredMixin):
                     pincode=pincode, flat=flat, area=area,
                     landmark=landmark, city=city, state=state, country=country
                 )
+
+                if Address.objects.filter(user=user).count() == 0:
+                    address.default = True
+                else:
+                    address.default = False
                 address.save()
+
                 messages.success(request, 'Address added successfully!!')
                 return redirect('user-address')
             

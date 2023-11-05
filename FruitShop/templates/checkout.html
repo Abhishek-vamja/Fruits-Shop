@@ -73,7 +73,11 @@
 								</div>
 								<i class="fas fa-times-circle" data-bs-dismiss="alert" aria-label="Close" style='font-size:36px'></i>
 							</div>
-							
+							{% for i in messages %}
+							<div class="alert alert-{{i.tags}}" role="alert">
+								{{i}}
+							</div>
+							{% endfor %}
 						</div>
 
 					</div>
