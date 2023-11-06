@@ -12,12 +12,18 @@ from django.views.decorators.csrf import csrf_exempt
 
 
 class UserAuth:
-    """Handle user authentication"""
+    """
+    Handle user authentication.
+    """
+
+
     def send_otp(mobile , otp):
         """
-        Send otp to user mobile.
+        Log the user out and redirect to the shop page.
+
+        This function logs the user out of their session and redirects them to the shop page.
         """
-        print("FUNCTION CALLED")
+        # print("FUNCTION CALLED")
         conn = http.client.HTTPSConnection("api.msg91.com")
         authkey = settings.AUTH_KEY 
         headers = {
@@ -32,14 +38,22 @@ class UserAuth:
         print(data)
         return None
 
-
     def user_logout(request):
-        """Logout user."""
+        """        
+        Log the user out and redirect to the shop page.        
+
+        This function logs the user out of their session and redirects them to the shop page.
+        """
         logout(request)
         return redirect('/shop/')
 
-
     def login_attempt(request):
+        """
+        Handle user login attempts and OTP generation.
+
+        This function handles user login attempts, generates an OTP, and sends it to the user's mobile number.
+        If the user is not found, it displays a message on the login page.
+        """
         if request.method == 'POST':
             mobile = request.POST.get('mobile')
             
@@ -59,6 +73,12 @@ class UserAuth:
 
     # NOT working as expected...
     def resend_otp(request):
+        """
+        Resend the OTP to the user's mobile number.
+
+        This function allows the user to request a resend of the OTP to their mobile number.
+        It checks if the user exists and resend the OTP accordingly.
+        """
         if request.method == 'POST':
             mobile = request.POST.get('mobile')
             user = Profile.objects.filter(mobile=mobile).first()
@@ -76,6 +96,12 @@ class UserAuth:
 
     @csrf_exempt
     def login_otp(request):
+        """
+        Verify the OTP and log the user in.
+
+        This function verifies the OTP entered by the user and logs them in if it matches the stored OTP.
+        If the OTP is incorrect, it displays an error message.
+        """
         mobile = request.session['mobile']
         context = {'mobile':mobile}
         if request.method == 'POST':
@@ -92,10 +118,14 @@ class UserAuth:
         
         return render(request,'user/verify_otp.html' , context)
 
-
     # Not working as expected...
     def login_email(request):
-        """Login with email and password."""
+        """
+        Log in the user using email and password.
+
+        This function attempts to log in the user by authenticating the provided email and password. If the authentication is successful,
+        the user is logged in and redirected to the homepage. If the authentication fails, an error message is displayed.
+        """
         if request.method == "POST":
             email = request.POST.get('email')
             password = request.POST.get('password')
@@ -116,8 +146,13 @@ class UserAuth:
             
         return render(request, 'user/login_email.html')
 
-
     def register(request):
+        """
+        Register a new user.
+
+        This function handles user registration. It checks if the user and profile with the provided email and mobile number
+        already exist. If not, it creates a new user and sends an OTP to the user's mobile number for verification.
+        """
         if request.method == 'POST':
             email = request.POST.get('email')
             name = request.POST.get('name')
@@ -143,8 +178,15 @@ class UserAuth:
 
     @csrf_exempt
     def otp(request):
+        """
+        Verify the OTP and log the user in after registration.
+
+        This function verifies the OTP entered during the registration process and logs the user in if it matches the stored OTP.
+        If the OTP is incorrect, it displays an error message.
+        """
         mobile = request.session['mobile']
         context = {'mobile':mobile}
+
         if request.method == 'POST':
             otp = request.POST.get('otp')
             profile = Profile.objects.filter(mobile=mobile).first()
@@ -168,9 +210,16 @@ User Profile session.
 """
 
 class UserAccounts(LoginRequiredMixin):
-    """Handle user account."""
+    """
+    This class handles user accounts and provides methods,
+    for managing user details and addresses.
+    """
+
+
     def user_account(request):
-        """User detail."""
+        """
+        Renders the user's account details.
+        """
         greeting = get_time_of_day_greeting()
         context = {
             'greeting': greeting
@@ -178,18 +227,25 @@ class UserAccounts(LoginRequiredMixin):
         return render(request, 'user/profile.html', context)
     
     class UserAddress:
-        """HAndle address of account."""
+        """
+        This nested class handles user addresses within the user account.
+        """
+
+
         def user_address(request):
-            """Users Address."""
+            """
+            Renders the list of user addresses.
+            """
             address = Address.objects.filter(user=request.user)
             context = {
                 'address': address
             }
             return render(request, 'user/user_address.html', context)
 
-
         def add_user_address(request):
-            """Add new address for user."""
+            """
+            Add a new address for user.
+            """
             if request.method == "POST":
                 country = request.POST.get('country')
                 full_name = request.POST.get('full_name')
@@ -219,9 +275,10 @@ class UserAccounts(LoginRequiredMixin):
             
             return render(request, 'user/user_add_address.html', locals())
 
-
         def user_change_address(request,address_id):
-            """Change address as needed."""
+            """
+            Allows the user to change an existing address.
+            """
             address = get_object_or_404(Address, id=address_id)
 
             if request.method == 'POST':
@@ -236,10 +293,8 @@ class UserAccounts(LoginRequiredMixin):
                 state = request.POST.get('state')
                 default_id = request.POST.get('default')
                 user = request.user
-
-                """
-                Update the fields of the address object.
-                """
+                
+                # Update the fields of the address object.
                 if default_id:
                     set_as_default = Address.objects.get(user=user,id=default_id)
                     set_as_default.default = True
@@ -263,45 +318,52 @@ class UserAccounts(LoginRequiredMixin):
             }
             return render(request, 'user/user_change_address.html', context)
 
-
         def make_default_address(request,address_id):
-            """Make default address"""
+            """
+            Sets a user's address as the default address.
+            """
             try:
                 address_to_set_default = Address.objects.get(user=request.user,id=address_id)
                 address_to_set_default.default = True
                 address_to_set_default.save()
-
-                """
-                Set all other addresses as non-default.
-                """
+                
+                # Set all other addresses as non-default.
                 Address.objects.filter(user=request.user).exclude(id=address_id).update(default=False)
                 messages.success(request, 'Changed default address successfully!!')
                 return redirect('user-address')
+            
             except Address.DoesNotExist:
-                
                 print('EEEEEEEE')    
 
-
         def remove_user_address(request, address_id):
-            """Remove user address."""
+            """
+            Remove user's address.
+            """
             address = Address.objects.get(id=address_id)
             address.delete()
             messages.success(request ,'Remove address successfully!!')
             return redirect('user-address')
 
     class UserProfile:
-        """Handle user profile."""
+        """
+        Handle user's profile.
+        """
+
+
         def get_user_profile(request):
-            """Change user profile as needed."""
+            """
+            Retrieves and renders the user's profile information.
+            """
             user_profile = Profile.objects.get(user=request.user)
             context = {
                 'profile': user_profile
             }
             return render(request , 'user/user_profile.html', context)        
 
-
         def change_user_name(request, user_id):
-            """Change user name."""
+            """
+            Allows the user to change their name.
+            """
             profile = get_object_or_404(Profile, id=user_id)
 
             if request.method == 'POST':              
@@ -320,6 +382,10 @@ class UserAccounts(LoginRequiredMixin):
 
 
 def get_time_of_day_greeting():
+    """
+    Determines the time of day and returns an appropriate, 
+    greeting message (e.g., "Good morning," "Good afternoon," or "Good evening").
+    """
     now = datetime.now()
     current_time = now.time()
     
