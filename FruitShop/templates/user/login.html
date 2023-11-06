@@ -114,15 +114,15 @@
 <body>
 {% load static %}
     <header>
-        <!--Amazon Image Logo-->
+        <!--Image Logo-->
         <div class="d-flex flex-row justify-content-center">
             <div class="row">
                 <div class="col-md">
                     <img class="img_1" src="{% static 'assets/img/logo.png' %}" alt="FruitKha Logo" />
-                </div><!--Col 1 End-->
-            </div><!--Row 1 End-->
-        </div><!--Container End-->
-        <!--Amazon Image Logo-->
+                </div>
+            </div>
+        </div>
+        <!--Image Logo-->
     </header>
 
     <!--Form-->
@@ -133,6 +133,11 @@
                     <form method="post">
                         {% csrf_token %}
                         <div class="sign-in"><samp>Sign In</samp></div>
+                                {% if message %}
+                                <div class="alert alert-{{class}}" role="alert">
+                                    {{message}}
+                                </div>
+                                {% endif %}
                         <div class="form-group">
                             <label id="words_1" for="exampleInputEmail1">Mobile Number</label>
                             <input type="text" class="form-control" name="mobile">
@@ -150,6 +155,7 @@
             </div><!--Row 1 End-->
         </div><!--Container End-->
         <!--Form-->
+        <a class="btn btn-warning mb-3" href="{% url 'login-email' %}" id="grey-button" style="margin-inline: 380px;"><small>Login with password</small></a>
         <br>
         <div class="styled-text">
             <div class="line"></div>

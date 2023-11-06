@@ -139,6 +139,16 @@
                     <form style="width: min-content;" method="post">
                         {% csrf_token %}
                         <div class="sign-in"><samp><small>Authentication required</small></samp></div>
+                        {% for i in messages %}
+                        <div class="alert alert-{{i.tags}}" role="alert">
+                            {{i}}
+                        </div>
+                        {% endfor %}
+                        {% if message %}
+                        <div class="alert alert-{{class}}" role="alert">
+                            {{message}}
+                        </div>
+                        {% endif %}
                         <samp><b>IND +91{{mobile}}</b></samp><br><br>
                         <small><b>We’ve sent a One Time Password (OTP) to the mobile number above. Please enter it to complete verification.</b></small>
                         <br><br>
@@ -167,7 +177,7 @@
             <div class="text">or</div>
             <div class="line"></div>
         </div>
-        <a class="btn btn-warning" id="grey-button" style="margin-inline: 380px; font-size: small;">Sign in with password</a>
+        <a class="btn btn-warning" id="grey-button" href="{% url 'login-email' %}" style="margin-inline: 380px; font-size: small;">Sign in with password</a>
     </div>
     <div class="d-flex flex-row justify-content-center footer_1">
         <div class="row">

@@ -60,7 +60,7 @@ class UserAuth:
             user = Profile.objects.filter(mobile=mobile).first()
             
             if user is None:
-                context = {'message' : 'User not found' , 'class' : 'danger' }
+                context = {'message' : 'Please check entered Mobile Number !!' , 'class' : 'danger' }
                 return render(request,'user/login.html' , context)
             
             otp = str(random.randint(1000 , 9999))
@@ -71,7 +71,6 @@ class UserAuth:
             return redirect('login_otp')        
         return render(request,'user/login.html')
 
-    # NOT working as expected...
     def resend_otp(request):
         """
         Resend the OTP to the user's mobile number.
@@ -79,20 +78,26 @@ class UserAuth:
         This function allows the user to request a resend of the OTP to their mobile number.
         It checks if the user exists and resend the OTP accordingly.
         """
-        if request.method == 'POST':
-            mobile = request.POST.get('mobile')
-            user = Profile.objects.filter(mobile=mobile).first()
-            if user:
-                otp = str(random.randint(1000, 9999))
-                user.otp = otp
-                user.save()
-                UserAuth.send_otp(mobile, otp)
-                request.session['mobile']=mobile
-                return redirect('login_otp')
-            else:
-                return redirect('login_otp')
-            
-        return render(request, 'user/verify_otp.html')
+        mobile = request.session['mobile']
+        print(mobile)
+        user = Profile.objects.filter(mobile=mobile).first()
+        if user:
+            otp = str(random.randint(1000, 9999))
+            user.otp = otp
+            try:
+                if user.otp_attempt == 0:
+                    messages.warning(request, 'You have not attempt !!')
+                else:
+                    user.otp_attempt -= 1
+
+            except Exception as e:
+                print(e, 'EEEEE')
+
+            user.save()
+            UserAuth.send_otp(mobile, otp)
+            return redirect('login_otp')
+        else:
+            return redirect('login_otp')
 
     @csrf_exempt
     def login_otp(request):
@@ -111,14 +116,15 @@ class UserAuth:
             if otp == profile.otp:
                 user = User.objects.get(id = profile.user.id)
                 login(request , user)
+                profile.otp_attempt = 3
+                profile.save()
                 return redirect('index')
             else:
-                context = {'message' : 'Wrong OTP' , 'class' : 'danger','mobile':mobile }
+                context = {'message' : 'Wrong OTP !!' , 'class' : 'danger','mobile':mobile }
                 return render(request,'user/verify_otp.html' , context)
         
         return render(request,'user/verify_otp.html' , context)
 
-    # Not working as expected...
     def login_email(request):
         """
         Log in the user using email and password.
@@ -129,7 +135,9 @@ class UserAuth:
         if request.method == "POST":
             email = request.POST.get('email')
             password = request.POST.get('password')
-            user = authenticate(request,username=email, password=password)
+            print(email)
+            print(password)
+            user = authenticate(request, username=email, password=password)
             print(user)
 
             if user is not None:
@@ -139,7 +147,7 @@ class UserAuth:
             else:
                 print('In Elseeee')
                 context = {
-                    'message': 'email and password are not valid',
+                    'message': 'email and password are not valid !!',
                     'class': 'danger',
                 }
                 return render(request, 'user/login_email.html', context)
@@ -166,7 +174,7 @@ class UserAuth:
                 context = {'message' : 'User already exists' , 'class' : 'danger' }
                 return render(request,'user/register.html' , context)
                 
-            user = User(email = email , name = name, password = password)
+            user = User.objects.create_user(email = email , name = name, password = password)
             user.save()
             otp = str(random.randint(1000 , 9999))
             profile = Profile(user = user , mobile=mobile , otp = otp) 

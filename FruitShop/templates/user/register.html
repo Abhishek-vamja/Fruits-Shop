@@ -1,48 +1,193 @@
-{% extends "user/base.html" %}
-{% block content %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    {% load static %}
+    <meta charset="utf-8">
+    <title>FruitKha</title>
+    <link rel="shortcut icon" type="image/png" href="{% static 'assets/img/favicon.png' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+        integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <style>
+        .img_1 {
+            height: 60px;
+            width: 200px;
+            margin-top: 20px;
+            margin-bottom: 50px;
+        }
+
+        .extra-margin {
+            margin-top: 200px;
+        }
+
+        .btn {
+            width: 350px;
+            margin-top: 20px;
+        }
 
 
 
-<div class="container mt-5 pt-4">
-    
-    <div class="col-6 mx-auto">
-        <h3 class="text-center">Register</h3>
-        <form method="post">
-            {% csrf_token %}
 
-            {% if message %}
-            <div class="alert alert-{{class}}">
-                {{message}}
-            </div>
-            {% endif %}
+        form {
+            border: 1px solid lightgrey;
+            padding-left: 25px;
+            padding-right: 25px;
+            padding-top: 16px;
+            padding-bottom: 25px;
+            border-radius: 5px;
+        }
 
+        #words_1 {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        #words_2 {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        #words_3 {
+            font: 7px;
+        }
+
+        .sign-in {
+            margin-bottom: 10px;
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .conditions {
+            font-size: 8px;
+            color: blue;
+            margin-top: 30px;
+            z-index: 2;
+        }
+
+        .footer_1 {
+            width: max;
+            height: 350px;
+            background-color: #fff;
+            margin-top: 30px;
+
+        }
+
+        #exampleCheck1 {
+            margin-left: 3px;
+            margin-top: 11px;
+        }
+
+        .keep-sign-in {
+            margin-left: 24px;
+            margin-top: 8px;
+            font-size: 14px;
+        }
+
+        #sign-in {
+            margin-block-start: auto
+        }
+
+        #grey-button {
+            background-color: whitesmoke;
+            border: black;
+            border-radius: 15px;
+        }
+        .styled-text {
+            text-align: center;
+        }
+
+        .line {
+            display: inline-block;
+            width: 145px; /* Adjust the width to control the length of the lines */
+            border-top: 1px solid gainsboro; /* Adjust the border color and thickness */
+            margin-bottom: 4px;
+        }
+
+        .text {
+            display: inline-block;
+            padding: -1 10px; /* Adjust the padding as needed */
+            color: #767676;
+        }
+    </style>
+</head>
+
+<body>
+{% load static %}
+    <header>
+        <!--Image Logo-->
+        <div class="d-flex flex-row justify-content-center">
             <div class="row">
-                <div class="form-group col-12">
-                    <input type="text" placeholder="Email" class="form-control" name="email" id="">
+                <div class="col-md">
+                    <img class="img_1" src="{% static 'assets/img/logo.png' %}" alt="FruitKha Logo" />
                 </div>
             </div>
-            <div class="row">
-                <div class="form-group col-12">
-                    <input type="text" placeholder="Name" class="form-control" name="name" id="">
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-12">
-                    <input type="password" placeholder="Password" class="form-control" name="password" id="">
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-12">
-                    <input type="text" placeholder="Mobile" class="form-control" name="mobile" id="">
-                </div>
-            </div>
+        </div>
+        <!--Image Logo-->
+    </header>
 
-            <p>Already have account <a href="{% url 'login' %}">Login</a></p>
-            <button class="btn btn-primary">Submit</button>
-        </form>
+    <!--Form-->
+    <div class="container">
+        <div class="d-flex flex-row justify-content-center">
+            <div class="row">
+                <div class="col-md">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="sign-in"><samp>Sign Up</samp></div>
+                        <hr>
+                        <div class="form-group">
+                            <label id="words_1" for="exampleInputEmail1">Email</label>
+                            <input type="email" class="form-control" name="email">
+                        </div>
+                        <div class="form-group">
+                            <label id="words_1" for="exampleInputEmail1">Name</label>
+                            <input type="text" class="form-control" name="name">
+                        </div>
+                        <div class="form-group">
+                            <label id="words_1" for="exampleInputEmail1">Password</label>
+                            <input type="password" class="form-control" name="password">
+                        </div>
+                        <div class="form-group">
+                            <label id="words_1" for="exampleInputEmail1">Mobile</label>
+                            <input type="text" class="form-control" name="mobile">
+                        </div>
+                        <div class="form-group">
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-warning" id="sign-in"
+                                    style="background: orange;"><small>Sign Up</small></button>
+                                <hr>
+                                <p class="keep-sign-in">Fill up the form for being member of<span> <b>FruitKha</b>.</span></p>
+                            </div>
+                        </div>
+                    </form>
+                </div><!--Col 1 End-->
+            </div><!--Row 1 End-->
+        </div><!--Container End-->
+        <!--Form-->
+        <br>
+        <div class="styled-text">
+            <!-- <div class="line"></div> -->
+            <div class="text"><small>If you already member of FruitKha?</small></div>
+            <!-- <div class="line"></div> -->
+        </div>
+        <a class="btn btn-warning" href="{% url 'login' %}" id="grey-button" style="margin-inline: 380px;"><small>Login with OTP</small></a>
+        <br>
+        <br>
+        <div class="styled-text">
+            <div class="line"></div>
+            <div class="text"><small> OR </small></div>
+            <div class="line"></div>
+        </div>
+        <a class="btn btn-warning" href="{% url 'login-email' %}" id="grey-button" style="margin-inline: 380px;"><small>Login with Password.</small></a>
     </div>
+    <div class="d-flex flex-row justify-content-center footer_1">
+        <div class="row">
+            <div class="col">
+                <p class="conditions"><a>Conditions of Use &nbsp &nbsp &nbsp </a> <a>Privacy Notice&nbsp &nbsp &nbsp
+                    </a> <a>Help&nbsp &nbsp &nbsp </a></p>
+            </div><!--Footer Col 1 End-->
+        </div><!--Footer Row 1 End-->
 
-</div>
+    </div>
+</body>
 
-
-{% endblock %}
+</html>
