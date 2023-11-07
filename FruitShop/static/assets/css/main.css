@@ -474,10 +474,6 @@ a.boxed-btn, a.bordered-btn, a.cart-btn {
   margin-bottom: 80px;
 }
 
-.breadcrumb-bg {
-  background-image: url(../img/breadcrumb-bg.jpg);
-}
-
 .breadcrumb-text p {
   color: #F28123;
   font-weight: 700;

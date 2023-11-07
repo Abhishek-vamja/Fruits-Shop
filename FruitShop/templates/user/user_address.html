@@ -43,7 +43,7 @@
 {% load static %}
 
 <!-- breadcrumb-section -->
-<div class="breadcrumb-section breadcrumb-bg">
+<div class="breadcrumb-section" style="background-image: url('{% static 'assets/img/address.jpg' %}');">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 offset-lg-2 text-center">
@@ -102,7 +102,7 @@
                         {% if i.default %}
                         <div class="custom-toast-container">
                             <div class="custom-toast" id="customToast">
-                                <b>Edit failed</b>
+                                <b style="color: red;">Edit failed</b>
                                 <hr>
                                 <address>
                                     <b>{{i.full_name}}</b>: <br>
@@ -115,17 +115,41 @@
                                 <hr>
                                 <div class="alert alert-danger" role="alert">
                                     <i class="fas fa-exclamation-triangle"></i>
-                                        This address is used as your residential address for digital purchases. To edit
-                                        this address, first set a different residential address for your digital
-                                        purchases.
+                                    This address is used as your residential address for digital purchases. To edit
+                                    this address, first set a different residential address for your digital
+                                    purchases.
                                 </div>
                                 <button class="btn btn-warning" id="closeButton">Cancel</button>
                                 <span class="close-button" id="closeButton2">&times;</span>
                             </div>
                         </div>
+                        <!-- remove -->
+                        <div class="custom-toast-container" id="2">
+                            <div class="custom-toast" id="customToast2">
+                                <b style="color: red;">Remove failed</b>
+                                <hr>
+                                <address>
+                                    <b>{{i.full_name}}</b>: <br>
+                                    {{i.area}}, {{i.flat}} <br>
+                                    {{i.landmark}}, <br>
+                                    {{i.city|upper}}, {{i.state}}, {{i.pincode}}<br>
+                                    {{i.country|upper}}.<br>
+                                    Mobile number: {{i.mobile}}
+                                </address>
+                                <hr>
+                                <div class="alert alert-danger" role="alert">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    This address is used as your residential address for digital purchases. To edit
+                                    this address, first set a different residential address for your digital
+                                    purchases.
+                                </div>
+                                <button class="btn btn-warning" id="closeButton3">Cancel</button>
+                                <span class="close-button" id="closeButton4">&times;</span>
+                            </div>
+                        </div>
+                        <!-- remove -->
                         <small><a id="showCustomToastBtn" style="color: #007bff;">Edit</a>
-                            | <a href="{% url 'remove-address' i.id %}">Remove</a>{% if i.default %} {% else %} | <a
-                                href="{% url 'make-default' i.id %}">Set as default</a>{% endif %}</small>
+                            | <a id="showCustomToastBtn2" style="color: #007bff;">Remove</a>{% if i.default %} {% else %} | <a href="{% url 'make-default' i.id %}">Set as default</a>{% endif %}</small>
                         {% else %}
                         <small><a href="{% url 'change-address' i.id %}">Edit</a> | <a
                                 href="{% url 'remove-address' i.id %}">Remove</a>{% if i.default %} {% else %} | <a
@@ -143,14 +167,29 @@
 {% block js %}
 <script>
     const showCustomToastBtn = document.getElementById('showCustomToastBtn');
+    const showCustomToastBtn2 = document.getElementById('showCustomToastBtn2');
+
     const customToastContainer = document.querySelector('.custom-toast-container');
+    const customToastContainer2 = document.getElementById('2');
+
+
     const customToast = document.getElementById('customToast');
+    const customToast2 = document.getElementById('customToast2');
+
     const closeButton = document.getElementById('closeButton');
     const closeButton2 = document.getElementById('closeButton2');
+
+    const closeButton3 = document.getElementById('closeButton3');
+    const closeButton4 = document.getElementById('closeButton4');
+
 
 
     showCustomToastBtn.addEventListener('click', () => {
         customToastContainer.style.display = 'block';
+    });
+
+    showCustomToastBtn2.addEventListener('click', () => {
+        customToastContainer2.style.display = 'block';
     });
 
     closeButton.addEventListener('click', () => {
@@ -159,6 +198,14 @@
 
     closeButton2.addEventListener('click', () => {
         customToastContainer.style.display = 'none';
+    });
+
+    closeButton3.addEventListener('click', () => {
+        customToastContainer2.style.display = 'none';
+    });
+
+    closeButton4.addEventListener('click', () => {
+        customToastContainer2.style.display = 'none';
     });
 </script>
 {% endblock %}
