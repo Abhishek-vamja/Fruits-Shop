@@ -33,5 +33,5 @@ urlpatterns = [
     path('remove-address/<uuid:address_id>/', UserAccounts.UserAddress.remove_user_address, name='remove-address')
     
     # USER ACCOUNT >> CONTACT...
-    # Make Soon..
+    # Made in shop url..
 ]
