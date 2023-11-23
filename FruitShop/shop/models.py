@@ -26,6 +26,19 @@ DEAL_OF = (
     ('Year', 'Year')
 )
 
+class Contact(BaseModel):
+    """Contact objects."""
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+    name = models.CharField(max_length=20)
+    email = models.EmailField()
+    phone = models.CharField(max_length=10)
+    subject = models.CharField(max_length=255)
+    message = models.TextField()
+
+    def __str__(self) -> str:
+        return f'{self.user} contact you..'
+
+
 class Product(BaseModel):
     """Product objects."""   
     title = models.CharField(max_length=255)
@@ -120,9 +133,7 @@ class OrderPlaced(BaseModel):
 
 
 class Coupon(BaseModel):
-    """
-    Coupon objects.
-    """
+    """Coupon objects."""
     code = models.CharField(max_length=15, unique=True)
     discount_value = models.FloatField()
     valid_from = models.DateTimeField(auto_now_add=True)
@@ -131,3 +142,28 @@ class Coupon(BaseModel):
 
     def __str__(self) -> str:
         return f"Coupon Code {self.code}"
+
+
+class News(BaseModel):
+    """News objects."""
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+    title = models.CharField(max_length=255)
+    date = models.DateField(auto_now_add=True)
+    image = models.ImageField(upload_to='img/news',null=True)
+    description = models.TextField()
+
+    def __str__(self) -> str:
+        return f'{self.user.name}, {self.title}'
+
+
+class Comment(BaseModel):
+    """Comment objects."""
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+    news = models.ForeignKey(News, on_delete=models.CASCADE)
+    message = models.TextField()
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self) -> str:
+        return f'Comment by {self.user} on {self.news.title}'

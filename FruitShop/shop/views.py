@@ -29,7 +29,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, get_object_or_404
 from shop.models import (
-    Category, Product, Cart, OrderPlaced, Coupon, Address
+    Category, Product, Cart, OrderPlaced, Coupon, Address, Contact, News, Comment
 )
 
 
@@ -80,7 +80,8 @@ class HomeView(View):
         details as needed.
         """
         all_products = Product.objects.all()
-
+        all_news = News.objects.all().order_by('-created_at')[:3]
+        
         # Offer product
         prod_id = None
         for i in all_products:
@@ -92,6 +93,7 @@ class HomeView(View):
         context = {
             'all_products': all_products,
             'offers': all_products,
+            'all_news': all_news
         }
         return render(request, 'index.html', context)
 
@@ -142,13 +144,60 @@ class ContactUsView(View):
     def get(self, request):
         return render(request, 'contact.html')
 
+    def post(self, request):
+        user = request.user
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+        subject = request.POST.get('subject')
+        message = request.POST.get('message')
+
+        contact_obj = Contact(
+            user=user, name=name, email=email, phone=phone,
+            subject=subject, message=message
+        )
+
+        contact_obj.save()
+        return redirect('contact-us')
+
 
 class NewsView(View):
     """News page view."""
 
 
     def get(self, request):
-        return render(request, 'news.html')
+        news_obj = News.objects.all()
+        context = {
+            'news': news_obj
+        }
+        return render(request, 'news.html', context)
+
+    class SingleNewsView(View):
+        """Single news view."""
+
+        def get(self, request, news_id):
+            news_obj = News.objects.get(id=news_id)
+            comment_obj = Comment.objects.filter(news=news_id)[:5]
+            recent_posts = News.objects.all()[:5]
+
+            context = {
+                'news': news_obj,
+                'comments': comment_obj,
+                'recent_posts': recent_posts
+            }
+            return render(request, 'single-news.html', context)
+
+        def post(self, request, news_id):
+            user = request.user
+            news_obj = get_object_or_404(News, id=news_id)
+            message = request.POST.get('comment')
+
+            comment_obj = Comment.objects.create(
+                user=user, news=news_obj, message=message
+            )
+            
+            comment_obj.save()
+            return redirect('single-news', news_id=news_id)
 
 
 class ShopView(View):
