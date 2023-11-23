@@ -88,11 +88,17 @@
 					<p>{{products.description}}</p>
 					<div class="single-product-form">
 						{% if user.is_authenticated %}
+						{% if greeting == 'Good evening' %}
+						<button type="submit" class="btn btn-warning"><i class="fas fa-shopping-cart"></i> Add to
+							cart</button>
+						<p><strong>Categories: </strong>Fruits, Organic</p>
+						{% else %}
 						<form action="{% url 'add_to_cart' products.slug %}" method="post">{% csrf_token %}
 							<button type="submit" class="btn btn-warning"><i class="fas fa-shopping-cart"></i> Add to
 								cart</button>
 						</form>
 						<p><strong>Categories: </strong>Fruits, Organic</p>
+						{% endif %}
 						{% else %}
 						<a href="{% url 'login' %}" class="btn btn-warning" style="width: 80px;">Login</a>
 						{% endif %}
@@ -161,19 +167,19 @@
 			<div class="col-lg-12">
 				<div class="logo-carousel-inner">
 					<div class="single-logo-item">
-						<img src="{'% static 'assets/img/company-logos/1.png' %}" alt="">
+						<img src="{% static 'assets/img/company-logos/1.png' %}" alt="">
 					</div>
 					<div class="single-logo-item">
-						<img src="{'% static 'assets/img/company-logos/2.png' %}" alt="">
+						<img src="{% static 'assets/img/company-logos/2.png' %}" alt="">
 					</div>
 					<div class="single-logo-item">
-						<img src="{'% static 'assets/img/company-logos/3.png' %}" alt="">
+						<img src="{% static 'assets/img/company-logos/3.png' %}" alt="">
 					</div>
 					<div class="single-logo-item">
-						<img src="{'% static 'assets/img/company-logos/4.png' %}" alt="">
+						<img src="{% static 'assets/img/company-logos/4.png' %}" alt="">
 					</div>
 					<div class="single-logo-item">
-						<img src="{'% static 'assets/img/company-logos/5.png' %}" alt="">
+						<img src="{% static 'assets/img/company-logos/5.png' %}" alt="">
 					</div>
 				</div>
 			</div>

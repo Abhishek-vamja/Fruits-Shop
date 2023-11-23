@@ -45,33 +45,37 @@
 											<p>
 												<label>
 													{% if i.default %}
-														<input type="radio" name="selected_address" value="{{i.id}}" checked>
-														<b>{{i.full_name}}</b>:
-														<br>{{i.flat}},{{i.area}},
-														<br>{{i.city|upper}}, {{i.state}}, {{i.pincode}}
-														<br>{{i.country}},
-														<br>Mobile: {{i.mobile}}
+													<input type="radio" name="selected_address" value="{{i.id}}"
+														checked>
+													<b>{{i.full_name}}</b>:
+													<br>{{i.flat}},{{i.area}},
+													<br>{{i.city|upper}}, {{i.state}}, {{i.pincode}}
+													<br>{{i.country}},
+													<br>Mobile: {{i.mobile}}
 													{% else %}
-														<input type="radio" name="selected_address" value="{{i.id}}">
-														<b>{{i.full_name}}</b>:
-														<br>{{i.flat}},{{i.area}},
-														<br>{{i.city|upper}}, {{i.state}}, {{i.pincode}}
-														<br>{{i.country}},
-														<br>Mobile: {{i.mobile}}
+													<input type="radio" name="selected_address" value="{{i.id}}">
+													<b>{{i.full_name}}</b>:
+													<br>{{i.flat}},{{i.area}},
+													<br>{{i.city|upper}}, {{i.state}}, {{i.pincode}}
+													<br>{{i.country}},
+													<br>Mobile: {{i.mobile}}
 													{% endif %}
 												</label>
 											</p>
 											{% endfor %}
-											
+
 										</div>
 									</div>
 								</div>
 							</div>
-							<div class="alert alert-warning alert-dismissible fade show d-flex justify-content-between" role="alert">
+							<div class="alert alert-warning alert-dismissible fade show d-flex justify-content-between"
+								role="alert">
 								<div>
-									<strong>INFO: </strong> If you don't select the address we get <a href="{% url 'user-address' %}">Default Address.</a>
+									<strong>INFO: </strong> If you don't select the address we get <a
+										href="{% url 'user-address' %}">Default Address.</a>
 								</div>
-								<i class="fas fa-times-circle" data-bs-dismiss="alert" aria-label="Close" style='font-size:36px'></i>
+								<i class="fas fa-times-circle" data-bs-dismiss="alert" aria-label="Close"
+									style='font-size:36px'></i>
 							</div>
 							{% for i in messages %}
 							<div class="alert alert-{{i.tags}}" role="alert">
@@ -79,7 +83,6 @@
 							</div>
 							{% endfor %}
 						</div>
-
 					</div>
 			</div>
 
@@ -126,9 +129,10 @@
 							</tr>
 						</tbody>
 					</table>
-					<button type="submit" class="btn btn-danger" style="padding: 10px; margin-top: 20px;">Place
+					<button type="submit" class="btn btn-danger"
+						style="padding: 10px; margin-top: 20px;">Place
 						Order</button>
-					</form>
+				</form>
 				</div>
 			</div>
 		</div>
@@ -164,13 +168,13 @@
 </div>
 <!-- end logo carousel -->
 
-{% endblock %}
+{% endblock body %}
 
 {% block js %}
 <script>
-    var alertList = document.querySelectorAll('.alert');
-    alertList.forEach(function (alert) {
-        new bootstrap.Alert(alert);
-    });
+	var alertList = document.querySelectorAll('.alert');
+	alertList.forEach(function (alert) {
+		new bootstrap.Alert(alert);
+	});
 </script>
 {% endblock js %}

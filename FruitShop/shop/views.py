@@ -17,13 +17,17 @@ Classes:
 """
 
 import math
+import razorpay
 from datetime import datetime
 from django.db.models import Q
+from django.conf import settings
 from django.contrib import messages
 from django.views.generic import View
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, redirect, get_object_or_404
+from user.views import get_time_of_day_greeting
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import render, redirect, get_object_or_404
 from shop.models import (
     Category, Product, Cart, OrderPlaced, Coupon, Address
 )
@@ -133,12 +137,16 @@ class AboutView(View):
 
 class ContactUsView(View):
     """Contact page view."""
+
+
     def get(self, request):
         return render(request, 'contact.html')
 
 
 class NewsView(View):
     """News page view."""
+
+
     def get(self, request):
         return render(request, 'news.html')
 
@@ -162,7 +170,6 @@ class ShopView(View):
         """
         all_products = Product.objects.all().order_by('-id')
         all_category = Category.objects.all().order_by('-id')
-
   
         # Pagination logic.
         no_of_page = 3
@@ -251,9 +258,13 @@ class SingleProductView(View):
         to suggest to the user. It then renders the single-product page with these details.
         """
         random_products = Product.objects.all().order_by('?')
-        products = Product.objects.get(slug=product_slug)        
+        products = Product.objects.get(slug=product_slug) 
+        get_greeting = get_time_of_day_greeting()
+        print(get_greeting)
+
         context = {
             'random_products': random_products,
+            'greeting': get_greeting,
             'products': products
         }
 
@@ -392,7 +403,6 @@ class CheckoutView(LoginRequiredMixin, View):
     address selection, order placement, and handling discounts.
     """
 
-
     def get(self, request):
         """
         Render the checkout page.
@@ -451,7 +461,7 @@ class CheckoutView(LoginRequiredMixin, View):
         if address is None:
             messages.warning(request, 'Please select or add an address!!')
             return redirect('checkout')
-        
+
         for i in cart:
             if 'discount_amount' in request.session:               
                 OrderPlaced.objects.create(

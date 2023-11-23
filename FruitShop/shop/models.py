@@ -98,6 +98,7 @@ PAYMENT = (
     ('COD','COD')
 )
 
+
 class OrderPlaced(BaseModel):
     """OrderPlaced objects."""
     user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
@@ -108,7 +109,7 @@ class OrderPlaced(BaseModel):
     address = models.ForeignKey(Address, on_delete=models.CASCADE, default="")
     status = models.CharField(max_length=50,choices=STATUS_CHOICE,default='Confirmed')
     paid = models.BooleanField(default=False)
-    payment = models.CharField(max_length=255,choices=PAYMENT,default='COD')
+    payment_mode = models.CharField(max_length=255,choices=PAYMENT,default='COD')
     ordered_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
