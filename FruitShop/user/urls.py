@@ -30,8 +30,13 @@ urlpatterns = [
     path('new-address/', UserAccounts.UserAddress.add_user_address, name='new-address'),
     path('change-address/<uuid:address_id>/', UserAccounts.UserAddress.user_change_address, name='change-address'),
     path('make-default/<uuid:address_id>/', UserAccounts.UserAddress.make_default_address, name='make-default'),
-    path('remove-address/<uuid:address_id>/', UserAccounts.UserAddress.remove_user_address, name='remove-address')
+    path('remove-address/<uuid:address_id>/', UserAccounts.UserAddress.remove_user_address, name='remove-address'),
     
     # USER ACCOUNT >> CONTACT...
     # Made in shop url..
+
+    # ........... ADMIN ........... #
+
+    path('dashboard/', Dashboard.get_dashboard, name='dashboard'),
+    path('dashboard/all-users/', Dashboard.get_users, name='all-users'),
 ]

@@ -2,11 +2,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.conf import settings
 from django.contrib.auth import logout, login, authenticate
 from datetime import datetime, time
+from django.db.models import Count, Q
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 import random
 from user.models import *
-from shop.models import Address
+from shop.models import *
 import http.client
 from django.views.decorators.csrf import csrf_exempt
 
@@ -389,14 +390,51 @@ class UserAccounts(LoginRequiredMixin):
             return render(request, 'user/change_name.html', context)
 
 
+# ...ADMIN...
+
+class Dashboard(LoginRequiredMixin):
+
+    def get_dashboard(request):
+        order_obj = OrderPlaced.objects.all()
+        user_obj = User.objects.all()
+        context = {
+            'orders': order_obj,
+            'users': user_obj,
+        }
+        return render(request, 'dash/index.html', context)
+
+    def get_users(request):
+        users_obj = Profile.objects.annotate(
+            num_orders=Count('user__orderplaced', filter=Q(user__orderplaced__status='Delivered'),distinct=True),
+            num_addresses=Count('user__address', distinct=True),
+            num_comments=Count('user__comment', distinct=True)
+        )
+
+        user_data = []
+
+        for user in users_obj:
+            user_data.append({
+                'user': user,
+                'num_orders': user.num_orders,
+                'num_addresses': user.num_addresses,
+                'num_comments': user.num_comments
+            })
+
+        context = {
+            'users_data': user_data,
+        }
+        return render(request, 'dash/all_user.html', context)
+
+
 def get_time_of_day_greeting():
     """
     Determines the time of day and returns an appropriate, 
     greeting message (e.g., "Good morning," "Good afternoon," or "Good evening").
     """
-    now = datetime.now()
+    now = datetime.datetime.now()
     current_time = now.time()
-    
+    print(current_time)
+
     if current_time < time(12, 0):
         return "Good morning"
     elif current_time < time(17, 0):
