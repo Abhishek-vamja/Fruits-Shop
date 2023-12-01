@@ -38,5 +38,10 @@ urlpatterns = [
     # ........... ADMIN ........... #
 
     path('dashboard/', Dashboard.get_dashboard, name='dashboard'),
+    
     path('dashboard/all-users/', Dashboard.get_users, name='all-users'),
+    path('dashboard/delete-user/<int:user_id>/',Dashboard.delete_user, name='delete-user'),
+    
+    path('dashboard/all-products/', Dashboard.get_products, name='all-products'),
+    path('dashboard/delete-products/<uuid:product_id>/', Dashboard.delete_product, name='delete-product')
 ]

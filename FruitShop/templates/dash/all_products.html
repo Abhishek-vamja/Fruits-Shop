@@ -1,4 +1,5 @@
 {% extends 'dash/base.html' %}
+{% load static %}
 {% block style %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
     integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59D5u2D0QDbPI8p9dH1Q8L1r" crossorigin="anonymous">
@@ -7,7 +8,6 @@
         from {
             width: 0;
         }
-
         to {
             width: 100%;
         }
@@ -19,128 +19,111 @@
         white-space: nowrap;
         animation: typewriter 2s steps(40) 1s 1 normal both;
     }
-
-    .image-circul {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100px;
-        width: 100px;
-        background: #fff;
-        border-radius: 50%;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .image-circul i {
-        font-size: 3em;
-        color: #555;
-    }
-
-    .edit-delete-icons {
-        display: flex;
-        justify-content: space-between;
-    }
-
-    .edit-delete-icons a {
-        margin-right: 10px;
-        color: #555;
-    }
 </style>
 {% endblock style %}
-{% load static %}
 {% block body %}
 <div class="content-wrapper">
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h3><samp class="typewriter">USER</samp></h3>
+                    <h3><samp class="typewriter">PRODUCT</samp></h3>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
-                        <li class="breadcrumb-item active">All Users</li>
+                        <li class="breadcrumb-item active">All Products</li>
                     </ol>
                 </div>
             </div>
-        </div>
+        </div><!-- /.container-fluid -->
     </section>
     <section class="content">
         <div class="container-fluid">
-            <h3 class="mt-4 mb-4">All Users</h3>
+            <h3 class="mt-4 mb-4">All Products</h3>
             <hr>
             <div class="row">
-                {% for i in users_data %}
+                {% for i in products %}
                 <div class="col-md-4">
                     <!-- Widget: user widget style 1 -->
                     <div class="card card-widget widget-user">
                         <!-- Add the bg color to the header using any of the bg-* classes -->
-                        <div class="widget-user-header text-white" style="background: black; opacity: 0.6;">
-                            <h3 class="widget-user-username text-right">{{i.user}}</h3>
-                            <h5 class="widget-user-desc text-right">{{i.user.name|title}}</h5>
-                            <br>
-                            <div class="edit-delete-icons">
-                                <a href="" title="Edit Follower">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <a href="{% url 'delete-user' i.user.id %}" title="Delete Follower">
-                                    <i class="fas fa-trash"></i>
-                                </a>
-                            </div>
+                        <div class="widget-user-header bg-info">
+                            <h3 class="widget-user-username">{{i.title}}</h3>
+                            <h5 class="widget-user-desc">{{i.category}}</h5>
                         </div>
                         <div class="widget-user-image">
-                            <!-- Replace the image with the user icon -->
-                            <div class="image-circul"><i class="fas fa-user fa-5x"></i></div>
+                            <img class="img-circle elevation-2" src="{{i.image.url}}">
                         </div>
                         <div class="card-footer">
                             <div class="row">
                                 <div class="col-sm-4 border-right">
                                     <div class="description-block">
-                                        <h5 class="description-header">{{i.num_orders}}</h5>
-                                        <span class="description-text">ORDERS</span>
+                                        <h5 class="description-header">${{i.price}}</h5>
+                                        <span class="description-text">Price</span>
                                     </div>
+                                    <!-- /.description-block -->
                                 </div>
+                                <!-- /.col -->
                                 <div class="col-sm-4 border-right">
                                     <div class="description-block">
-                                        <h5 class="description-header">{{i.num_addresses}}</h5>
-                                        <span class="description-text">ADDRESS</span>
+                                        <a href="#">
+                                            <i class="fas fa-edit"></i>
+                                            <span class="description-text">Edit</span>
+                                        </a>
                                     </div>
+                                    <!-- /.description-block -->
                                 </div>
+                                <!-- /.col -->
                                 <div class="col-sm-4">
                                     <div class="description-block">
-                                        <h5 class="description-header">{{i.num_comments}}</h5>
-                                        <span class="description-text">COMMENTS</span>
+                                        <a href="{% url 'delete-product' i.id %}">
+                                            <i class="fas fa-trash"></i>
+                                            <span class="description-text">Delete</span>
+                                        </a>
                                     </div>
+                                    <!-- /.description-block -->
                                 </div>
+                                <!-- /.col -->
                             </div>
+                            <!-- /.row -->
                         </div>
                     </div>
+                    <!-- /.widget-user -->
                 </div>
                 {% endfor %}
             </div>
-            <hr>
+        </div>
+        <hr>
             <!-- Pagination -->
             <div class="pagination">
                 <span class="step-links">
-                    {% if users_data.has_previous %}
+                    {% if products.has_previous %}
                     <a href="?page=1">&laquo; First</a>
                     OR
-                    <a href="?page={{ users_data.previous_page_number }}">Previous</a>
+                    <a href="?page={{ products.previous_page_number }}">Previous</a>
                     {% endif %}
 
                     <span class="current">
-                        Page {{ users_data.number }} of {{ users_data.paginator.num_pages }}.
+                        Page {{ products.number }} of {{ products.paginator.num_pages }}.
                     </span>
 
-                    {% if users_data.has_next %}
-                    <a href="?page={{ users_data.next_page_number }}">Next</a>
+                    {% if products.has_next %}
+                    <a href="?page={{ products.next_page_number }}">Next</a>
                     OR
-                    <a href="?page={{ users_data.paginator.num_pages }}">Last &raquo;</a>
+                    <a href="?page={{ products.paginator.num_pages }}">Last &raquo;</a>
                     {% endif %}
                 </span>
             </div>
             <!-- End Pagination -->
-        </div>
     </section>
 </div>
 {% endblock body %}
+
+{% block js %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelector('samp').classList.add('typewriter');
+    });
+</script>
+{% endblock js %}

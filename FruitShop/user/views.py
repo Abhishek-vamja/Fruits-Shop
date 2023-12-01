@@ -3,6 +3,7 @@ from django.conf import settings
 from django.contrib.auth import logout, login, authenticate
 from datetime import datetime, time
 from django.db.models import Count, Q
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 import random
@@ -395,35 +396,78 @@ class UserAccounts(LoginRequiredMixin):
 class Dashboard(LoginRequiredMixin):
 
     def get_dashboard(request):
-        order_obj = OrderPlaced.objects.all()
+        order_obj = OrderPlaced.objects.exclude(status='Delivered')
+        contact_obj = Contact.objects.filter(read=False)
         user_obj = User.objects.all()
+        product_obj = Product.objects.all()
+        news_obj = News.objects.all()
+
         context = {
             'orders': order_obj,
             'users': user_obj,
+            'contact': contact_obj,
+            'product': product_obj,
+            'news': news_obj,
         }
         return render(request, 'dash/index.html', context)
 
     def get_users(request):
         users_obj = Profile.objects.annotate(
-            num_orders=Count('user__orderplaced', filter=Q(user__orderplaced__status='Delivered'),distinct=True),
+            num_orders=Count('user__orderplaced', filter=Q(user__orderplaced__status='Delivered'), distinct=True),
             num_addresses=Count('user__address', distinct=True),
             num_comments=Count('user__comment', distinct=True)
         )
 
-        user_data = []
+        # Number of items to display per page
+        items_per_page = 9  # Adjust as needed
 
-        for user in users_obj:
-            user_data.append({
-                'user': user,
-                'num_orders': user.num_orders,
-                'num_addresses': user.num_addresses,
-                'num_comments': user.num_comments
-            })
+        # Paginate the user data
+        paginator = Paginator(users_obj, items_per_page)
+        page = request.GET.get('page', 1)
+
+        try:
+            users_data = paginator.page(page)
+        except PageNotAnInteger:
+            users_data = paginator.page(1)
+        except EmptyPage:
+            users_data = paginator.page(paginator.num_pages)
 
         context = {
-            'users_data': user_data,
+            'users_data': users_data,
         }
         return render(request, 'dash/all_user.html', context)
+
+    def delete_user(request, user_id):
+        user_obj = User.objects.get(id=user_id)
+        user_obj.delete()
+        return redirect('all-users')
+
+    def get_products(request):
+        all_products = Product.objects.all()
+
+        # Number of items to display per page
+        items_per_page = 15  # Adjust as needed
+
+        # Paginate the user data
+        paginator = Paginator(all_products, items_per_page)
+        page = request.GET.get('page', 1)
+
+        try:
+            product_data = paginator.page(page)
+        except PageNotAnInteger:
+            product_data = paginator.page(1)
+        except EmptyPage:
+            product_data = paginator.page(paginator.num_pages)
+
+        context = {
+            'products': product_data,
+        }
+        return render(request, 'dash/all_products.html', context)
+
+    def delete_product(request, product_id):
+        product_obj = Product.objects.get(id=product_id)
+        product_obj.delete()
+        return redirect('all-products')
 
 
 def get_time_of_day_greeting():

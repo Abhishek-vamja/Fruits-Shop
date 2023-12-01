@@ -34,6 +34,10 @@ class Contact(BaseModel):
     phone = models.CharField(max_length=10)
     subject = models.CharField(max_length=255)
     message = models.TextField()
+    read = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['-created_at']
 
     def __str__(self) -> str:
         return f'{self.user} contact you..'
