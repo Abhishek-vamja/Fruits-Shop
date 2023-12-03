@@ -404,20 +404,31 @@ class Dashboard(LoginRequiredMixin):
     @permission_required('is_superuser')
     def get_dashboard(request):
         order_obj = OrderPlaced.objects.exclude(status='Delivered')
+        complete_order_obj = OrderPlaced.objects.filter(status='Delivered')
         contact_obj = Contact.objects.filter(read=False)
         user_obj = User.objects.all()
         product_obj = Product.objects.all()
         news_obj = News.objects.all()
 
+        amount = 0
+        for i in complete_order_obj:
+            value = i.price
+            amount = value + amount
+            
+        total_earning = amount
+
         context = {
             'orders': order_obj,
             'users': user_obj,
+            'complete_order': complete_order_obj,
+            'total_earning': total_earning,
             'contact': contact_obj,
             'product': product_obj,
             'news': news_obj,
         }
         return render(request, 'dash/index.html', context)
 
+    @permission_required('is_superuser')
     def get_users(request):
         users_obj = Profile.objects.annotate(
             num_orders=Count('user__orderplaced', filter=Q(user__orderplaced__status='Delivered'), distinct=True),
@@ -444,11 +455,13 @@ class Dashboard(LoginRequiredMixin):
         }
         return render(request, 'dash/all_user.html', context)
 
+    @permission_required('is_superuser')
     def delete_user(request, user_id):
         user_obj = User.objects.get(id=user_id)
         user_obj.delete()
         return redirect('all-users')
 
+    @permission_required('is_superuser')
     def get_products(request):
         all_products = Product.objects.all()
         category_obj = Category.objects.all()
@@ -473,6 +486,7 @@ class Dashboard(LoginRequiredMixin):
         }
         return render(request, 'dash/all_products.html', context)
 
+    @permission_required('is_superuser')
     def add_products(request):
         category_obj = Category.objects.all()
 
@@ -509,6 +523,7 @@ class Dashboard(LoginRequiredMixin):
         }
         return render(request, 'dash/add_products.html', context)
 
+    @permission_required('is_superuser')
     def edit_products(request, product_id):
         product_obj = get_object_or_404(Product, id=product_id)
 
@@ -549,6 +564,7 @@ class Dashboard(LoginRequiredMixin):
             messages.success(request, f'Product {title} change successfully!!')
             return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
+    @permission_required('is_superuser')
     def delete_product(request, product_id):
         product_obj = Product.objects.get(id=product_id)
         product_obj.delete()
