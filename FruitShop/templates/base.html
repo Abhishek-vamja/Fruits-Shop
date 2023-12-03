@@ -91,6 +91,9 @@
                                         <a href=""><i class="fas fa-user"><span
                                                     style="margin: 5px;"></span>{{user.name|upper}}</i></a>
                                         <ul class="sub-menu">
+                                            {% if user.is_superuser %}
+                                            <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                                            {% endif %}
                                             <li><a href="{% url 'user-account' %}">Your Account</a></li>
                                             <li><a href="{% url 'cart' %}">Cart</a></li>
                                             <li><a href="{% url 'logout' %}">Logout</a></li>

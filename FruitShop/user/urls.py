@@ -4,6 +4,7 @@ Url mapping for user.
 from django.urls import path
 from user.views import *
 
+
 urlpatterns = [
     # USER AUTHENTICATION...
     path('' , UserAuth.login_attempt , name="login"),
@@ -43,5 +44,7 @@ urlpatterns = [
     path('dashboard/delete-user/<int:user_id>/',Dashboard.delete_user, name='delete-user'),
     
     path('dashboard/all-products/', Dashboard.get_products, name='all-products'),
-    path('dashboard/delete-products/<uuid:product_id>/', Dashboard.delete_product, name='delete-product')
+    path('dashboard/add-products/', Dashboard.add_products, name='add-products'),
+    path('dashboard/edit-product/<uuid:product_id>/', Dashboard.edit_products, name='edit-product'),
+    path('dashboard/delete-products/<uuid:product_id>/', Dashboard.delete_product, name='delete-product'),
 ]

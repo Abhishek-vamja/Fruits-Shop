@@ -8,16 +8,26 @@
         from {
             width: 0;
         }
+
         to {
             width: 100%;
         }
     }
-
-    h3 samp.typewriter {
+    .typewriter {
         display: inline-block;
         overflow: hidden;
         white-space: nowrap;
         animation: typewriter 2s steps(40) 1s 1 normal both;
+    }
+    .offering-product {
+        text-align: center;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .offering-product samp {
+        background-color: #fff;
+        padding: 0 10px;
+        font-weight: bold;
     }
 </style>
 {% endblock style %}
@@ -38,6 +48,15 @@
             </div>
         </div><!-- /.container-fluid -->
     </section>
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        <samp>{{ message }}</samp>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endfor %}
+
     <section class="content">
         <div class="container-fluid">
             <h3 class="mt-4 mb-4">All Products</h3>
@@ -67,14 +86,136 @@
                                 <!-- /.col -->
                                 <div class="col-sm-4 border-right">
                                     <div class="description-block">
-                                        <a href="#">
+                                        <a href="#" data-toggle="modal" data-target="#modal-lg-{{i.id}}">
                                             <i class="fas fa-edit"></i>
                                             <span class="description-text">Edit</span>
                                         </a>
                                     </div>
-                                    <!-- /.description-block -->
                                 </div>
-                                <!-- /.col -->
+
+                                <div class="modal fade" id="modal-lg-{{i.id}}">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Edit Product {{i.title}}</h4>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form method="post" action="{% url 'edit-product' i.id %}" enctype="multipart/form-data">
+                                                    {% csrf_token %}
+                                                    <div class="card-body">
+                                                        <div class="form-group">
+                                                            <label for="exampleInputEmail1">Title</label>
+                                                            <input type="text" name="title" value="{{i.title}}"
+                                                                class="form-control" placeholder="Enter Product Name">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="exampleInputCategory">Category</label>
+                                                            <select name="category" id="" class="form-control">
+                                                                {% for category_items in category %}
+                                                                <option value="{{category_items.title}}" {% if
+                                                                    category_items.title==i.category.title %}selected{%
+                                                                    endif %}>
+                                                                    {{category_items.title}}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="exampleInputPrice">Price</label>
+                                                            <input type="number" name="price" class="form-control"
+                                                                placeholder="Enter Product Price" value="{{i.price}}">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="exampleInputDescription">Description</label>
+                                                            <textarea name="description" class="form-control"
+                                                                placeholder="Write descriptions for product..">{{i.description}}</textarea>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="exampleInputFile">Image</label>
+                                                            <br>
+                                                            <b>Current file :</b>{{i.image.url}}
+                                                            <div class="input-group">
+                                                                <div class="custom-file">
+                                                                    <input type="file" name="image" class="custom-file-input"
+                                                                        id="exampleInputFile" accept="image/*" onchange="updateFileName(this)">
+                                                                    <label class="custom-file-label" for="exampleInputFile">Choose file</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            {% if i.available %}
+                                                            <input type="checkbox" name="available"
+                                                                class="form-check-input" id="exampleCheck1" checked>
+                                                            {% else %}
+                                                            <input type="checkbox" name="available"
+                                                                class="form-check-input" id="exampleCheck1">
+                                                            {% endif %}
+                                                            <label class="form-check-label"
+                                                                for="exampleCheck1">Available</label>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="exampleInputSlug">Slug</label>
+                                                            <input type="text" name="slug" class="form-control"
+                                                                placeholder="Enter slug for product" value="{{i.slug}}">
+                                                        </div>
+                                                        <hr>
+                                                        <div class="offering-product">
+                                                            <samp><b>For offering product.</b></samp>
+                                                        </div>
+                                                        <hr>
+                                                        <div class="form-group">
+                                                            <label for="exampleInputPercentOff">Percent Off</label>
+                                                            <input type="number" name="percent_off" class="form-control"
+                                                                placeholder="Enter off in percent  product"
+                                                                value="{{i.percent_off}}">
+                                                        </div>
+                                                        <div class="form-check">
+                                                            {% if i.is_time_limited %}
+                                                            <input type="checkbox" name="is_time_limited"
+                                                                class="form-check-input" id="exampleCheck2" checked>
+                                                            {% else %}
+                                                            <input type="checkbox" name="is_time_limited"
+                                                                class="form-check-input" id="exampleCheck2">
+                                                            {% endif %}
+                                                            <label class="form-check-label" for="exampleCheck2">Is Time
+                                                                Limited</label>
+                                                        </div>
+                                                        <div class="form-group mt-2">
+                                                            <label for="exampleInputDiscountPrice">Discount
+                                                                Price</label>
+                                                            <input type="number" name="discount_price"
+                                                                class="form-control"
+                                                                placeholder="Discount price for product."
+                                                                value="{{i.discount_price}}">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="">Deal of</label>
+                                                            <select class="form-control" name="deal_of" id="">
+                                                                <option value="day" {% if i.deal_of == 'day' %}selected{% endif %}>Day</option>
+                                                                <option value="month" {% if i.deal_of == 'month' %}selected{% endif %}>Month</option>
+                                                                <option value="year" {% if i.deal_of == 'year' %}selected{% endif %}>Year</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="from-group">
+                                                            <label for="">Date</label>
+                                                            <input type="date" name="date" class="form-control"
+                                                                placeholder="Enter last date of offer."
+                                                                value="{{i.date}}">
+                                                        </div>
+                                                    </div>
+                                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer justify-content-between">
+                                                <button type="button" class="btn btn-default"
+                                                    data-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="col-sm-4">
                                     <div class="description-block">
                                         <a href="{% url 'delete-product' i.id %}">
@@ -95,27 +236,27 @@
             </div>
         </div>
         <hr>
-            <!-- Pagination -->
-            <div class="pagination">
-                <span class="step-links">
-                    {% if products.has_previous %}
-                    <a href="?page=1">&laquo; First</a>
-                    OR
-                    <a href="?page={{ products.previous_page_number }}">Previous</a>
-                    {% endif %}
+        <!-- Pagination -->
+        <div class="pagination">
+            <span class="step-links">
+                {% if products.has_previous %}
+                <a href="?page=1">&laquo; First</a>
+                OR
+                <a href="?page={{ products.previous_page_number }}">Previous</a>
+                {% endif %}
 
-                    <span class="current">
-                        Page {{ products.number }} of {{ products.paginator.num_pages }}.
-                    </span>
-
-                    {% if products.has_next %}
-                    <a href="?page={{ products.next_page_number }}">Next</a>
-                    OR
-                    <a href="?page={{ products.paginator.num_pages }}">Last &raquo;</a>
-                    {% endif %}
+                <span class="current">
+                    Page {{ products.number }} of {{ products.paginator.num_pages }}.
                 </span>
-            </div>
-            <!-- End Pagination -->
+
+                {% if products.has_next %}
+                <a href="?page={{ products.next_page_number }}">Next</a>
+                OR
+                <a href="?page={{ products.paginator.num_pages }}">Last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+        <!-- End Pagination -->
     </section>
 </div>
 {% endblock body %}
@@ -125,5 +266,12 @@
     document.addEventListener("DOMContentLoaded", function () {
         document.querySelector('samp').classList.add('typewriter');
     });
+</script>
+<script>
+    function updateFileName(input) {
+        var fileName = input.files[0].name;
+        var label = input.nextElementSibling;
+        label.innerHTML = fileName;
+    }
 </script>
 {% endblock js %}

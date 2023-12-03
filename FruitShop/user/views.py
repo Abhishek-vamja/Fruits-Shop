@@ -4,8 +4,14 @@ from django.contrib.auth import logout, login, authenticate
 from datetime import datetime, time
 from django.db.models import Count, Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib.auth.decorators import user_passes_test
+from django.utils.decorators import method_decorator
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+from django.http import HttpResponseRedirect
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.decorators import permission_required
 import random
 from user.models import *
 from shop.models import *
@@ -393,8 +399,9 @@ class UserAccounts(LoginRequiredMixin):
 
 # ...ADMIN...
 
-class Dashboard(LoginRequiredMixin):
+class Dashboard(LoginRequiredMixin):    
 
+    @permission_required('is_superuser')
     def get_dashboard(request):
         order_obj = OrderPlaced.objects.exclude(status='Delivered')
         contact_obj = Contact.objects.filter(read=False)
@@ -444,6 +451,7 @@ class Dashboard(LoginRequiredMixin):
 
     def get_products(request):
         all_products = Product.objects.all()
+        category_obj = Category.objects.all()
 
         # Number of items to display per page
         items_per_page = 15  # Adjust as needed
@@ -461,12 +469,90 @@ class Dashboard(LoginRequiredMixin):
 
         context = {
             'products': product_data,
+            'category': category_obj,
         }
         return render(request, 'dash/all_products.html', context)
+
+    def add_products(request):
+        category_obj = Category.objects.all()
+
+        # Add Product Login...
+        if request.method == 'POST':
+            title = request.POST.get('title')
+            category = request.POST.get('category')
+            price = request.POST.get('price')
+            description = request.POST.get('description')
+            image = request.FILES.get('image')
+            available = request.POST.get('available') == 'on'
+            slug = request.POST.get('slug')
+            percent_off = request.POST.get('percent_off')
+            is_time_limited = request.POST.get('is_time_limited') == 'on'
+            discount_price = request.POST.get('discount_price')
+            deal_of = request.POST.get('deal_of')
+            date = request.POST.get('date')
+
+            category_instance = get_object_or_404(Category, title=category)
+            discount_price = float(discount_price) if discount_price else None
+
+            products_obj = Product(
+                title=title, category=category_instance, price=price, description=description,
+                image=image, available=available, slug=slug, percent_off=percent_off,
+                is_time_limited=is_time_limited, discount_price=discount_price,
+                deal_of=deal_of, date=date
+            )
+            
+            products_obj.save()
+            messages.success(request, 'Product add successfully!!')
+
+        context = {
+            'category': category_obj,
+        }
+        return render(request, 'dash/add_products.html', context)
+
+    def edit_products(request, product_id):
+        product_obj = get_object_or_404(Product, id=product_id)
+
+        if request.method == 'POST':
+            title = request.POST.get('title')
+            category = request.POST.get('category')
+            price = request.POST.get('price')
+            description = request.POST.get('description')
+            image = request.FILES.get('image')
+            available = request.POST.get('available') == 'on'
+            slug = request.POST.get('slug')
+            percent_off = request.POST.get('percent_off')
+            is_time_limited = request.POST.get('is_time_limited') == 'on'
+            discount_price = request.POST.get('discount_price')
+            deal_of = request.POST.get('deal_of')
+            date = request.POST.get('date')
+
+            category_instance = get_object_or_404(Category, title=category)
+            discount_price = float(discount_price) if discount_price else None
+
+            upload_path = 'img/prod'
+            if image:
+                file_name = default_storage.save(f'{upload_path}/{image.name}', ContentFile(image.read()))
+                
+                Product.objects.filter(id=product_id).update(
+                    title=title, category=category_instance, price=price, description=description,
+                    image=file_name, available=available, slug=slug, percent_off=percent_off,
+                    is_time_limited=is_time_limited, discount_price=discount_price, deal_of=deal_of,
+                    date=date
+                )
+            else:
+                Product.objects.filter(id=product_id).update(
+                    title=title, category=category_instance, price=price, description=description,
+                    available=available, slug=slug, percent_off=percent_off,
+                    is_time_limited=is_time_limited, discount_price=discount_price, deal_of=deal_of,
+                    date=date
+                )
+            messages.success(request, f'Product {title} change successfully!!')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
     def delete_product(request, product_id):
         product_obj = Product.objects.get(id=product_id)
         product_obj.delete()
+        messages.success(request, 'Product delete successfully!!')
         return redirect('all-products')
 
 

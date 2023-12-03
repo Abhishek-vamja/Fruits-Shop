@@ -157,7 +157,9 @@
             <a href="index3.html" class="brand-link">
                 <img src="{% static 'admin/dist/img/AdminLTELogo.png' %}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
                     style="opacity: .8">
-                <span class="brand-text font-weight-light">Admin</span>
+                    {% if user.is_authenticated %}
+                <span class="brand-text font-weight-light">{{user.name|title}}</span>
+                {% endif %}
             </a>
 
             <!-- Sidebar -->
@@ -218,7 +220,7 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="pages/charts/inline.html" class="nav-link">
+                                    <a href="{% url 'add-products' %}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Add Product</p>
                                     </a>
