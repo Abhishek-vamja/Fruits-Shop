@@ -1,0 +1,114 @@
+{% extends 'dash/base.html' %}
+{% load static %}
+{% block style %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" />
+<style>
+    @keyframes typewriter {
+        from {
+            width: 0;
+        }
+
+        to {
+            width: 100%;
+        }
+    }
+
+    .typewriter {
+        display: inline-block;
+        overflow: hidden;
+        white-space: nowrap;
+        animation: typewriter 2s steps(40) 1s 1 normal both;
+    }
+</style>
+{% endblock style %}
+{% block body %}
+<div class="content-wrapper">
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="typewriter">All Category</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                        <li class="breadcrumb-item active">All Category</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        <samp>{{ message }}</samp>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endfor %}
+    <hr>
+    <section class="content">
+        <div class="row">
+            <div class="col-12" id="accordion">
+                {% for cat in category %}
+                <div class="card card-primary card-outline">
+                    <a class="d-block w-100" data-toggle="collapse" href="#collapse{{ forloop.counter }}">
+                        <div class="card-header">
+                            <h4 class="card-title w-100">
+                                {{ forloop.counter }}. {{ cat.title }}
+                            </h4>
+                            <div class="float-right">
+                                <a href="#" data-toggle="modal" data-target="#modal-default-{{cat.id}}">
+                                    <i class="fas fa-edit" style="margin-inline: 25px;"></i>
+                                </a>
+                                <a href="{% url 'delete-category' cat.id %}">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </a>
+                    <div class="modal fade" id="modal-default-{{cat.id}}">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h4 class="modal-title">Edit {{cat.title}}</h4>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <form action="{% url 'edit-category' cat.id %}" method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="exampleInputTitle">Title</label>
+                                        <input type="text" name="title" value="{{cat.title}}"
+                                            class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInputSlug">Slug</label>
+                                        <input type="text" name="slug" value="{{cat.slug}}"
+                                            class="form-control">
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Save changes</button>
+                              </form>
+                            </div>
+                            <div class="modal-footer justify-content-between">
+                              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                          </div>                 
+                        </div>
+                      </div>            
+                    <div id="collapse{{ forloop.counter }}" class="collapse show" data-parent="#accordion">
+                        <div class="card-body">
+                            <samp><b>slug:</b></samp> {{ cat.slug }}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock body %}

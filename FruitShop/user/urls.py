@@ -43,6 +43,11 @@ urlpatterns = [
     path('dashboard/all-users/', Dashboard.get_users, name='all-users'),
     path('dashboard/delete-user/<int:user_id>/',Dashboard.delete_user, name='delete-user'),
     
+    path('dashboard/all-categories/', Dashboard.get_category, name='all-categories'),
+    path('dashboard/add-category/', Dashboard.add_category, name='add-category'),
+    path('dashboard/edit-category/<uuid:category_id>/', Dashboard.edit_category, name='edit-category'),
+    path('dashboard/delete-category/<uuid:category_id>/', Dashboard.delete_category, name='delete-category'),
+
     path('dashboard/all-products/', Dashboard.get_products, name='all-products'),
     path('dashboard/add-products/', Dashboard.add_products, name='add-products'),
     path('dashboard/edit-product/<uuid:product_id>/', Dashboard.edit_products, name='edit-product'),

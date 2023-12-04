@@ -414,7 +414,7 @@ class Dashboard(LoginRequiredMixin):
         for i in complete_order_obj:
             value = i.price
             amount = value + amount
-            
+
         total_earning = amount
 
         context = {
@@ -571,6 +571,47 @@ class Dashboard(LoginRequiredMixin):
         messages.success(request, 'Product delete successfully!!')
         return redirect('all-products')
 
+    @permission_required('is_superuser')
+    def get_category(request):
+        category_obj = Category.objects.all()
+
+        context = {
+            'category': category_obj,
+        }
+        return render(request, 'dash/all_category.html', context)
+
+    @permission_required('is_superuser')
+    def add_category(request):
+        
+        if request.method == 'POST':
+            title = request.POST.get('title')
+            slug = request.POST.get('slug')
+
+            category_obj = Category(title=title, slug=slug)
+            category_obj.save()
+            messages.success(request, f'Category {title} added successfully!!')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+        return render(request, 'dash/add_category.html')
+
+    @permission_required('is_superuser')
+    def edit_category(request, category_id):
+
+        if request.method == 'POST':
+            title = request.POST.get('title')
+            slug = request.POST.get('slug')
+
+            Category.objects.filter(id=category_id).update(title=title,slug=slug)
+            messages.success(request, f'Category {title} change successfully!!')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+    @permission_required('is_superuser')
+    def delete_category(request, category_id):
+
+        category_obj = Category.objects.filter(id=category_id)
+        category_obj.delete()
+        messages.info(request, 'Category deleted successfully!!')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 def get_time_of_day_greeting():
     """
