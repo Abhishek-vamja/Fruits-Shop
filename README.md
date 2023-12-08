@@ -30,7 +30,6 @@ Ensure you have the following prerequisites installed:
     virtualenv env
 
     Activate Virtual Environment:
-    ```bash
     For Linux/macOS
     source venv/bin/activate
 
