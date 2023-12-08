@@ -73,4 +73,4 @@ Ensure you have the following prerequisites installed:
     ```bash
     python manage.py runserver
 
-![Project Logo](media/img/prod/product-img-2_kZrVoKX.jpg)
+![Project Logo](FruitShop/media/img/prod/product-img-6.jpg)
