@@ -51,6 +51,8 @@ Ensure you have the following prerequisites installed:
     pip install -r requirements.txt
 
 10. **Change Directories:**
+
+    ```bash
     -[your_directory]
         -[FruitShop]
             -[FruitShop]
