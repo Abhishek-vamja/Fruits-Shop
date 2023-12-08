@@ -52,10 +52,9 @@ Ensure you have the following prerequisites installed:
 
 10. **Change Directories:**
 
-    ```bash
-    -[your_directory]
-        -[FruitShop]
-            -[FruitShop]
+    - [your_directory]
+        - [FruitShop]
+            - [FruitShop]
 
 11. **Apply Migrations:**
  
