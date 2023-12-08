@@ -72,7 +72,3 @@ Ensure you have the following prerequisites installed:
 
     ```bash
     python manage.py runserver
-
-## Documentation
-
-[Download PDF Document](FruitShop/ABHISHEK_RESUME.pdf)
