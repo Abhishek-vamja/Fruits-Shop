@@ -15,7 +15,6 @@ downloads/
 eggs/
 .eggs/
 lib/
-media/
 lib64/
 parts/
 sdist/
@@ -120,11 +119,13 @@ celerybeat.pid
 # SageMath parsed files
 *.sage.py
 
+# Media files
+media/
+
 # Environments
 .env
 .venv
 env/
-env/Fruits-shop/FruitShop/media
 venv/
 ENV/
 env.bak/
