@@ -1,38 +1,20 @@
 # Fruits-Shop
 
-### Prerequisites
+## Prerequisites
 
 Ensure you have the following prerequisites installed:
 
-1. Python
-2. Pip
-3. Virtualenv
+1. **Python**
+2. **Pip**
+3. **Virtualenv**
 
-    Install Virtualenv in your system:
-    ```bash
-    python3 -m pip install --upgrade pip
-    python3 -m pip install virtualenv
+   Install Virtualenv in your system:
 
-    Verifying Installation:
+   ```bash
+   python3 -m pip install --upgrade pip
+   python3 -m pip install virtualenv
+
+4. **Verify the installation:**
+
     ```bash
     virtualenv --version
-
-### Setup
-
-1. Make New Directory.
-
-    ```bash
-    mkdir your_directory_name
-
-2. Make Virtual Environment.
-
-    ```bash
-    virtualenv env
-
-    1. Activate Virtual Environment:
-        For Linux/macOS
-        source venv/bin/activate
-
-    echo 'Hello world!!'
-    For Windows
-    venv\Scripts\activate
