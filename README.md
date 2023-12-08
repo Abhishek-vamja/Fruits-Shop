@@ -24,7 +24,7 @@ Ensure you have the following prerequisites installed:
     ```bash
     mkdir directory_name
 
-    <!-- Now Change Directory: -->
+    # Now Change Directory:
     cd directory_name
 
 6. **Create Virtual Environment:**
