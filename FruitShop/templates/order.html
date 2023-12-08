@@ -16,7 +16,9 @@
         <div class="row">
             <div class="col-lg-8 offset-lg-2 text center">
                 <div class="breadcrumb-text">
-                    <h1>Good Morning!!</h1>
+                    {% if user.is_authenticated %}
+                    <h1>Good Morning!! {{user.name|title}}</h1>
+                    {% endif %}
                 </div>
             </div>
         </div>

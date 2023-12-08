@@ -53,7 +53,7 @@ class UserAuth:
         This function logs the user out of their session and redirects them to the shop page.
         """
         logout(request)
-        return redirect('/shop/')
+        return redirect('index')
 
     def login_attempt(request):
         """

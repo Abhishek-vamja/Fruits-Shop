@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,11 +23,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-h(%vlfm@kn^i91t)!v_(2w+#lq74)jo234ex$q2+dp5f)%uf()'
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 ALLOWED_HOSTS = []
 
@@ -78,10 +81,23 @@ WSGI_APPLICATION = 'FruitShop.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# Default database...
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+# MySql Database
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.getenv('DATABASE_NAME'),
+        'USER': 'root',
+        'PASSWORD': os.getenv('DATABASE_PASSWORD'),
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
 
@@ -135,10 +151,4 @@ LOGOUT_REDIRECT_URL = '/'
 
 AUTH_USER_MODEL = 'user.User'
 
-AUTH_KEY = '408925AO3p9M0IMVp653dff4bP1'
-
-# STRIPE_PUBLISHABLE_KEY = 'pk_test_51OA4ZNSANukfe1XBxaXzdjXMS2No0hUU4gpZKAyQJXXYP81YrEVjIUr2UKIw9Ex7Q9Rj3aPEoCTEyQOPu3sFvvRE00A78po89R'
-# STRIPE_SECRET_KEY = 'sk_test_51OA4ZNSANukfe1XBbAo1nkRC8pzgtYLcRDxpxF04azQK3GV1XHtIbwWUuOQ8QaFhqtv5FaSTZzC3VO46W3HzxrTF00hyzqWwI3'
-
-RAZOR_KEY_ID = "rzp_test_c9tUdjaxXHXcdX"
-RAZOR_KEY_SECRET = "zUlY2xezMNRyVAu3Cral5le7"
+AUTH_KEY = os.getenv('AUTH_KEY_URL')

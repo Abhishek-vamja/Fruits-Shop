@@ -143,7 +143,7 @@
                 </div>
                 <div class="col-6">
                     <h5><b>Payment Method</b></h5>
-                    <p>{{order.payment}}</p>
+                    <p>{{order.payment_mode}}</p>
                 </div>
                 <div class="col">
                     <h5><b>Order Summary</b></h5>
@@ -224,7 +224,7 @@
                 </div>
                 <div class="col-6">
                     <h5><b>Payment Method</b></h5>
-                    <p>{{order.payment}}</p>
+                    <p>{{order.payment_mode}}</p>
                 </div>
                 <div class="col">
                     <h5><b>Order Summary</b></h5>
@@ -262,7 +262,7 @@
             <h5>Order Status</h5>
             <hr>
             <ol id="progress-bar">
-                {% if order.payment == 'Online' %}
+                {% if order.payment_mode == 'Online' %}
                 {% if order.status == 'Confirmed' %}
                 <li class="step-done">Confirmed</li>
                 <li class="step-active">Packed</li>
