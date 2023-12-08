@@ -124,6 +124,7 @@ celerybeat.pid
 .env
 .venv
 env/
+env/Fruits-shop/FruitShop/media
 venv/
 ENV/
 env.bak/
