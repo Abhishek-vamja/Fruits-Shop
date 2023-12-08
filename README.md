@@ -29,9 +29,10 @@ Ensure you have the following prerequisites installed:
     ```bash
     virtualenv env
 
-    Activate Virtual Environment:
-    For Linux/macOS
-    source venv/bin/activate
+    1. Activate Virtual Environment:
+        For Linux/macOS
+        source venv/bin/activate
 
+    echo 'Hello world!!'
     For Windows
     venv\Scripts\activate
