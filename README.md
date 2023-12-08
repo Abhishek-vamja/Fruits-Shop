@@ -72,3 +72,5 @@ Ensure you have the following prerequisites installed:
 
     ```bash
     python manage.py runserver
+
+![Project Logo](/home/hp/Downloads/wp2497133.jpg)
