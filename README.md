@@ -34,7 +34,6 @@ Ensure you have the following prerequisites installed:
 
 7. **Activate Virtual Environment:**
 
-        ```bash
         # For Linux/macOS
         source env/bin/activate
 
