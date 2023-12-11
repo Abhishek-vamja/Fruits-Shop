@@ -67,11 +67,11 @@
                         <!-- menu start -->
                         <nav class="main-menu">
                             <ul>
-                                <li class="current-list-item"><a href="{% url 'index' %}">Home</a></li>
-                                <li><a href="{% url 'about' %}">About</a></li>
-                                <li><a href="{% url 'news' %}">News</a></li>
-                                <li><a href="{% url 'contact-us' %}">Contact</a></li>
-                                <li><a href="">Shop</a>
+                                <li {% if request.resolver_match.url_name == 'index' %}class="current-list-item"{% endif %}><a href="{% url 'index' %}">Home</a></li>
+                                <li {% if request.resolver_match.url_name == 'about' %}class="current-list-item"{% endif %}><a href="{% url 'about' %}">About</a></li>
+                                <li {% if request.resolver_match.url_name == 'news' %}class="current-list-item"{% endif %}><a href="{% url 'news' %}">News</a></li>
+                                <li {% if request.resolver_match.url_name == 'contact-us' %}class="current-list-item"{% endif %}><a href="{% url 'contact-us' %}">Contact</a></li>
+                                <li {% if request.resolver_match.url_name == 'shop' %}class="current-list-item"{% endif %}><a href="">Shop</a>
                                     <ul class="sub-menu">
                                         <li><a href="{% url 'shop' %}">Shop</a></li>
                                         {% if user.is_authenticated %}
@@ -83,12 +83,12 @@
                                     <div class="header-icons">
                                         {% if user.is_authenticated %}
                                         <a class="shopping-cart" href="{% url 'cart' %}"><i
-                                                class="fas fa-shopping-cart"></i></a>
+                                                class="fas fa-shopping-cart" {% if request.resolver_match.url_name == 'cart' %}style="color:orange;"{% endif %}></i></a>
                                         {% endif %}
                                         <a class="mobile-hide search-bar-icon" href="#"><i
                                                 class="fas fa-search"></i></a>
                                         {% if user.is_authenticated %}
-                                        <a href=""><i class="fas fa-user"><span
+                                        <a href=""><i class="fas fa-user" {% if request.resolver_match.url_name == 'user-account' or request.resolver_match.url_name == 'order' or request.resolver_match.url_name == 'user-profile' or request.resolver_match.url_name == 'user-address' %}style="color:orange;"{% endif %}><span
                                                     style="margin: 5px;"></span>{{user.name|upper}}</i></a>
                                         <ul class="sub-menu">
                                             {% if user.is_superuser %}
