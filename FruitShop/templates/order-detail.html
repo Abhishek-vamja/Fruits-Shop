@@ -126,7 +126,7 @@
         <h5>Order Details</h5>
         <hr>
         <p>
-            <span>Order on {{order.created_at}} </span> <span style="color: gray;">|</span> <span> ORDER #
+            <span> <b>Order on:</b> {{order.created_at}} </span> <span style="color: gray;">|</span> <span> <b>Delivered on:</b> {{order.delivered_date}}</span> <span style="color: gray;">|</span> <span> <b> ORDER </b> #
                 {{order.id}}</span>
         </p>
         <div class="card">
@@ -179,14 +179,15 @@
         </div>
         <div class="card mt-3">
             <div class="cord-header">
+                {% for i in order.product.all %}
                 <div class="card-body d-flex">
                     <div class="col col-lg-2">
-                        <img src="{{order.product.image.url}}" alt="{{order.product.title}}" width="100" height="100">
+                        <img src="{{i.image.url}}" alt="{{i.title}}" width="100" height="100">
                     </div>
                     <div class="col">
-                        <h5 class="card-title">{{order.product.title}}</h5>
+                        <h5 class="card-title">{{i.title}}</h5>
                         <p class="card-text">Quantity: {{order.quantity}}</p>
-                        <p class="card-text">{{order.product.description}}</p>
+                        <p class="card-text">{{i.description}}</p>
                         <a href="" class="btn btn-warning" style="background-color: white;
                     border-radius: 6px; border: none;
                     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">View your item</a>
@@ -195,6 +196,8 @@
                         <a href="" class="btn btn-danger"><span>Write a product review</span></a>
                     </div>
                 </div>
+                <hr>
+                {% endfor %}
             </div>
         </div>
     </div>
@@ -222,9 +225,15 @@
                         Mobile: +91{{order.address.mobile}}
                     </address>
                 </div>
-                <div class="col-6">
+                <div class="col">
                     <h5><b>Payment Method</b></h5>
                     <p>{{order.payment_mode}}</p>
+                </div>
+                <div class="col">
+                    <h5><b>Ordered Items</b></h5>
+                    {% for i in order.product.all %}
+                    <p>{{forloop.counter}}. {{i.title}},{{i.category.title}}</p>
+                    {% endfor %}
                 </div>
                 <div class="col">
                     <h5><b>Order Summary</b></h5>
@@ -250,8 +259,13 @@
                                 <td class="item-amount">${{order.price}}</td>
                             </tr>
                             <tr>
-                                <td class="item-description"><b>To payed:</b></td>
+                                {% if order.payment_mode == 'Online' %}
+                                <td class="item-description"><b style="color: green;">Payed:</b></td>
                                 <td class="item-amount">$<b>{{order.price}}</b></td>
+                                {% else %}
+                                <td class="item-description"><b style="color: red;">To payed:</b></td>
+                                <td class="item-amount"><b style="color: green;">${{order.price}}</b></td>
+                                {% endif %}
                             </tr>
                         </tbody>
                     </table>

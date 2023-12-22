@@ -16,6 +16,7 @@ import random
 from user.models import *
 from shop.models import *
 import http.client
+import requests
 from django.views.decorators.csrf import csrf_exempt
 
 
@@ -31,20 +32,23 @@ class UserAuth:
 
         This function logs the user out of their session and redirects them to the shop page.
         """
-        # print("FUNCTION CALLED")
-        conn = http.client.HTTPSConnection("api.msg91.com")
-        authkey = settings.AUTH_KEY 
+        auth_key = settings.AUTH_KEY
+        url = f"https://control.msg91.com/api/v5/otp?mobile=91{mobile}"
+
         headers = {
-        "accept": "application/json",
-        "content-type": "application/json",
-        "authkey": authkey
+            "accept": "application/json",
+            "content-type": "application/json",
+            "authkey": auth_key
         }
-        url = "https://control.msg91.com/api/v5/otp?mobile=91"+mobile
-        conn.request("GET", url , headers=headers)
-        res = conn.getresponse()
-        data = res.read()
-        print(data)
-        return None
+
+        response = requests.post(url, headers=headers)
+        
+        # Check the response status
+        if response.status_code == 200:
+            print("OTP sent successfully")
+        else:
+            print(f"Failed to send OTP. Status code: {response.status_code}")
+            print(response.text)
 
     def user_logout(request):
         """        
@@ -143,10 +147,7 @@ class UserAuth:
         if request.method == "POST":
             email = request.POST.get('email')
             password = request.POST.get('password')
-            print(email)
-            print(password)
             user = authenticate(request, username=email, password=password)
-            print(user)
 
             if user is not None:
                 print('login')

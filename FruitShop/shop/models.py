@@ -119,7 +119,7 @@ PAYMENT = (
 class OrderPlaced(BaseModel):
     """OrderPlaced objects."""
     user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ManyToManyField(Product)
     quantity = models.PositiveIntegerField(default=1)
     price = models.FloatField(default=0)
     discount_price = models.FloatField(default=0)
@@ -128,6 +128,7 @@ class OrderPlaced(BaseModel):
     paid = models.BooleanField(default=False)
     payment_mode = models.CharField(max_length=255,choices=PAYMENT,default='COD')
     ordered_date = models.DateTimeField(auto_now_add=True)
+    delivered_date = models.DateField(null=True, default="", blank=True)
 
     class Meta:
         ordering = ['-ordered_date']
@@ -171,3 +172,16 @@ class Comment(BaseModel):
 
     def __str__(self) -> str:
         return f'Comment by {self.user} on {self.news.title}'
+
+
+class Quote(BaseModel):
+    """Quote objects."""
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+    quote_writer = models.CharField(max_length=20, null=True)
+    quote = models.TextField()
+
+    class Meta:
+        ordering = ['-created_at']
+    
+    def __str__(self) -> str:
+        return f"Quote by {self.user}"

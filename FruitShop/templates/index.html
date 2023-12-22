@@ -187,54 +187,23 @@
 		<div class="row">
 			<div class="col-lg-10 offset-lg-1 text-center">
 				<div class="testimonial-sliders">
+					{% for quote in all_quotes %}
 					<div class="single-testimonial-slider">
-						<div class="client-avater">
-							<img src="{% static 'assets/img/avaters/avatar1.png' %}" alt="">
+						<div class="">
+							<img src="{% static 'assets/img/quote.png' %}" alt="" style="max-width: 100px; margin: 0 auto;">
 						</div>
 						<div class="client-meta">
-							<h3>Saira Hakim <span>Local shop owner</span></h3>
+							<h3> {{ quote.user.name|title }} <span>{{ quote.quote_writer|title}}</span></h3>
 							<p class="testimonial-body">
-								" Sed ut perspiciatis unde omnis iste natus error veritatis et quasi architecto beatae
-								vitae dict eaque ipsa quae ab illo inventore Sed ut perspiciatis unde omnis iste natus
-								error sit voluptatem accusantium "
+								" {{ quote.quote }} "
 							</p>
 							<div class="last-icon">
 								<i class="fas fa-quote-right"></i>
 							</div>
 						</div>
 					</div>
-					<div class="single-testimonial-slider">
-						<div class="client-avater">
-							<img src="{% static 'assets/img/avaters/avatar2.png' %}" alt="">
-						</div>
-						<div class="client-meta">
-							<h3>David Niph <span>Local shop owner</span></h3>
-							<p class="testimonial-body">
-								" Sed ut perspiciatis unde omnis iste natus error veritatis et quasi architecto beatae
-								vitae dict eaque ipsa quae ab illo inventore Sed ut perspiciatis unde omnis iste natus
-								error sit voluptatem accusantium "
-							</p>
-							<div class="last-icon">
-								<i class="fas fa-quote-right"></i>
-							</div>
-						</div>
-					</div>
-					<div class="single-testimonial-slider">
-						<div class="client-avater">
-							<img src="{% static 'assets/img/avaters/avatar3.png' %}" alt="">
-						</div>
-						<div class="client-meta">
-							<h3>Jacob Sikim <span>Local shop owner</span></h3>
-							<p class="testimonial-body">
-								" Sed ut perspiciatis unde omnis iste natus error veritatis et quasi architecto beatae
-								vitae dict eaque ipsa quae ab illo inventore Sed ut perspiciatis unde omnis iste natus
-								error sit voluptatem accusantium "
-							</p>
-							<div class="last-icon">
-								<i class="fas fa-quote-right"></i>
-							</div>
-						</div>
-					</div>
+					{% endfor %}
+					
 				</div>
 			</div>
 		</div>
@@ -261,7 +230,7 @@
 						interdum velit. Nam eu molestie lorem.</p>
 					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente facilis illo repellat
 						veritatis minus, et labore minima mollitia qui ducimus.</p>
-					<a href="/shop/about/" class="boxed-btn mt-4">know more</a>
+					<a href="{% url 'about' %}" class="boxed-btn mt-4">know more</a>
 				</div>
 			</div>
 		</div>
@@ -274,7 +243,7 @@
 	<div class="container">
 		<h3>December sale is on! <br> with big <span class="orange-text">Discount...</span></h3>
 		<div class="sale-percent"><span>Sale! <br> Upto</span>50% <span>off</span></div>
-		<a href="/shop/" class="cart-btn btn-lg">Shop Now</a>
+		<a href="{% url 'shop' %}" class="cart-btn btn-lg">Shop Now</a>
 	</div>
 </section>
 <!-- end shop banner -->

@@ -29,7 +29,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, get_object_or_404
 from shop.models import (
-    Category, Product, Cart, OrderPlaced, Coupon, Address, Contact, News, Comment
+    Category, Product, Cart, OrderPlaced, Coupon, Address, Contact, News, Comment, Quote
 )
 
 
@@ -79,8 +79,9 @@ class HomeView(View):
         products available on the website's home page. It also handles limited-time product promotions and updates product
         details as needed.
         """
-        all_products = Product.objects.all()
+        all_products = Product.objects.all().order_by('?')
         all_news = News.objects.all().order_by('-created_at')[:3]
+        all_quotes = Quote.objects.all().order_by('?')[:3]
         
         # Offer product
         prod_id = None
@@ -93,7 +94,8 @@ class HomeView(View):
         context = {
             'all_products': all_products,
             'offers': all_products,
-            'all_news': all_news
+            'all_news': all_news,
+            'all_quotes': all_quotes,
         }
         return render(request, 'index.html', context)
 
@@ -511,17 +513,19 @@ class CheckoutView(LoginRequiredMixin, View):
             messages.warning(request, 'Please select or add an address!!')
             return redirect('checkout')
 
+        if 'discount_amount' in request.session:               
+            order = OrderPlaced.objects.create(
+                user=auth_user, address=address,
+                price=request.session['total'], discount_price=request.session['discount_amount']
+            )
+        else:   
+            order = OrderPlaced.objects.create(
+                user=auth_user, address=address,
+                price=request.session['total']
+            )
+
         for i in cart:
-            if 'discount_amount' in request.session:               
-                OrderPlaced.objects.create(
-                        user=auth_user, product=i.product, quantity=i.quantity, address=address,
-                        price=request.session['total'], discount_price=request.session['discount_amount']
-                )
-            else:   
-                OrderPlaced.objects.create(
-                    user=auth_user, product=i.product, quantity=i.quantity, address=address,
-                    price=request.session['total']
-                )
+            order.product.add(i.product)
 
         if 'valid_coupon_code' in request.session:
             valid_coupon_code = request.session['valid_coupon_code']
@@ -549,21 +553,26 @@ class OrderView(LoginRequiredMixin):
     def get_order(request):
         """
         Render the user's orders.
-        This method retrieves and renders a list of orders placed by the authenticated user, including total order amounts.
+        This method retrieves and renders a list of orders placed by the authenticated user,
+        including total order amounts.
         """
-        order = OrderPlaced.objects.filter(user=request.user)
-        amount = 0
-        for i in order:
-            if not i.paid:
-                if i.product.is_time_limited:
-                    value = i.product.discount_price * i.quantity
-                else:
-                    value = i.product.price * i.quantity
-                amount += value
+        orders = OrderPlaced.objects.filter(user=request.user)
+        total_amount = 0
+
+        for order in orders:
+            order_amount = 0
+            for product in order.product.all():
+                if not order.paid:
+                    if product.is_time_limited:
+                        order_amount += product.discount_price * order.quantity
+                    else:
+                        order_amount += product.price * order.quantity
+
+            total_amount += order_amount
 
         context = {
-            'order': order,
-            'total': amount
+            'order': orders,
+            'total': total_amount
         }
         return render(request, 'order.html', context)
 
@@ -573,22 +582,26 @@ class OrderView(LoginRequiredMixin):
         This method retrieves and renders detailed information about a specific order placed by the authenticated user.
         It includes the total amount, discounts, and shipping costs.
         """
+
         auth_user = request.user
-        order_details = get_object_or_404(OrderPlaced, user=auth_user, id=order_id)
-        order = OrderPlaced.objects.filter(user=auth_user, id=order_id)
+        order_details = OrderPlaced.objects.filter(user=auth_user,id=order_id)
+        user_orders = OrderPlaced.objects.get(user=auth_user,id=order_id)
+
         shipping = 45
         amount = 0
-        for i in order:
-            if i.product.is_time_limited:
-                value = i.product.discount_price * i.quantity
-            else:
-                value = i.product.price * i.quantity
-            amount += value
 
-        discount = amount - order_details.price
+        for order_item in order_details:
+            for i in order_item.product.all():
+                if i.is_time_limited:
+                    value = i.discount_price * order_item.quantity
+                else:
+                    value = i.price * order_item.quantity
+                amount += value
+
+            discount = amount - order_item.price
 
         context = {
-            'order': order_details,
+            'order': user_orders,
             'amount': amount,
             'discount': discount,
             'shipping': shipping,
