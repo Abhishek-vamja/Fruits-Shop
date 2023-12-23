@@ -267,7 +267,7 @@
 			<div class="col-lg-4 col-md-6">
 				<div class="single-latest-news">
 					<a href="{% url 'single-news' i.id %}">
-						<div class="latest-news-bg news-bg-1"></div>
+						<div class="latest-news-bg" style="background-image: url('{{i.image.url}}');"></div>
 					</a>
 					<div class="news-text-box">
 						<h3><a href="{% url 'single-news' i.id %}">{{i.title}}</a></h3>

@@ -151,17 +151,17 @@
                         <tbody>
                             <tr>
                                 <td class="item-description">Item(s) Subtotal:</td>
-                                <td class="item-amount">${{amount}}</td>
+                                <td class="item-amount"><b style="color: green;">+</b> ${{amount}}</td>
                             </tr>
                             <tr>
                                 <td class="item-description">Shipping:</td>
-                                <td class="item-amount">${{shipping}}</td>
+                                <td class="item-amount"><b style="color: red;">-</b> ${{shipping}}</td>
                             </tr>
                             {% if order.discount_price == 0 %}
                             {% else %}
                             <tr>
                                 <td class="item-description">Discount:</td>
-                                <td class="item-amount">${{order.discount_price}}</td>
+                                <td class="item-amount"><b style="color: red;">-</b> ${{order.discount_price}}</td>
                             </tr>
                             {% endif %}
                             <tr>

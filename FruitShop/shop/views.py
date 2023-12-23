@@ -29,6 +29,7 @@ from user.views import get_time_of_day_greeting
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, get_object_or_404
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from shop.models import (
     Category, Product, Cart, OrderPlaced, Coupon, Address, Contact, News, Comment, Quote
 )
@@ -170,8 +171,23 @@ class NewsView(View):
 
     def get(self, request):
         news_obj = News.objects.all()
+
+        # Number of items to display per page
+        items_per_page = 6  # Adjust as needed
+
+        # Paginate the user data
+        paginator = Paginator(news_obj, items_per_page)
+        page = request.GET.get('page', 1)
+
+        try:
+            news_data = paginator.page(page)
+        except PageNotAnInteger:
+            news_data = paginator.page(1)
+        except EmptyPage:
+            news_data = paginator.page(paginator.num_pages)
+
         context = {
-            'news': news_obj
+            'news': news_data
         }
         return render(request, 'news.html', context)
 
@@ -368,7 +384,11 @@ class CartVIew(LoginRequiredMixin, View):
         cart_items = Cart.objects.filter(user=auth_user)
 
         amount = sum(self.calculate_item_total(item) for item in cart_items)
-        shipping = 45
+        if cart_items.exists():
+            shipping = 45
+        else:
+            shipping = 0
+
         discount_amount = request.session.get('discount_amount', 0)
         total = amount + shipping - discount_amount 
         request.session['total'] = total
@@ -520,7 +540,7 @@ class CheckoutView(LoginRequiredMixin, View):
         
         if 'discount_amount' in request.session:               
             order = OrderPlaced.objects.create(
-                user=auth_user, address=address,
+                user=auth_user, address=address, quantity=quantity,
                 price=request.session['total'], discount_price=request.session['discount_amount']
             )
         else:   
@@ -562,26 +582,30 @@ class OrderView(LoginRequiredMixin):
         including total order amounts.
         """
         orders = OrderPlaced.objects.filter(user=request.user)
-        total_amount = 0
+        try:
+            total_amount = 0
 
-        for order in orders:
-            order_amount = 0
-            quantity_list = json.loads(order.quantity)
-            for product in order.product.all():
-                if not order.paid:
-                    if product.is_time_limited:
-                        order_amount += product.discount_price * sum(quantity_list)
-                    else:
-                        order_amount += product.price * sum(quantity_list)
+            for order in orders:
+                quantity_list = json.loads(order.quantity)
+                order_amount = 0
+                for product in order.product.all():
+                    if not order.paid:
+                        if product.is_time_limited:
+                            order_amount += product.discount_price * sum(quantity_list)
+                        else:
+                            order_amount += product.price * sum(quantity_list)
 
-            total_amount += order_amount
+                total_amount += order_amount
 
-        context = {
-            'order': orders,
-            'total': total_amount,
-            'product_quantities': zip(order.product.all(), quantity_list),
+            context = {
+                'order': orders,
+                'total': total_amount,
+                'product_quantities': zip(order.product.all(), quantity_list),
 
-        }
+            }
+        except:
+            return redirect('shop')
+        
         return render(request, 'order.html', context)
 
     def get_order_details(request, order_id):

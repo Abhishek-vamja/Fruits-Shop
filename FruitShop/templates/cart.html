@@ -87,11 +87,12 @@
 								<td><strong>Subtotal: </strong></td>
 								<td>${{cart_amount}}</td>
 							</tr>
+							{% if cart_items.exists %}
 							<tr class="total-data">
 								<td><strong>Shipping: </strong></td>
 								<td style="color: green;"><samp>+</samp>${{shipping_amount}}</td>
 							</tr>
-
+							{% endif %}
 							{% if request.session.discount_amount %}
 							<tr class="total-data">
 								<td><strong>Coupon: </strong></td>
@@ -106,8 +107,10 @@
 						</tbody>
 					</table>
 					<div class="cart-buttons">
-						<a href="/shop/items/" class="boxed-btn">Continue Shop</a>
-						<a href="/shop/checkout/" class="boxed-btn black">Check Out</a>
+						<a href="{% url 'shop' %}" class="boxed-btn">Continue Shop</a>
+						{% if cart_items.exists %}
+						<a href="{% url 'checkout' %}" class="boxed-btn black">Check Out</a>
+						{% endif %}
 					</div>
 				</div>
 
