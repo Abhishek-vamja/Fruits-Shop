@@ -10,6 +10,27 @@
         margin-bottom: 20px;
         /* Add margin to the bottom of each card */
     }
+    .card.delivered.neon-border {
+        position: relative;
+        background-color: lightcyan;
+        border: 2px solid transparent;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    @keyframes neonBorder {
+        0% {
+            border-color: transparent;
+        }
+        100% {
+            border-color: #0f0; /* Neon green border color */
+        }
+    }
+
+    /* Apply the neon border animation only for delivered cards */
+    .card.delivered.neon-border {
+        animation: neonBorder 4s infinite alternate; /* Example animation: neon border for 1 second, alternate between states */
+    }
 </style>
 {% endblock style %}
 
@@ -43,7 +64,7 @@
         </div>
         <hr>
         {% for order_item in order %}
-        <div class="card">
+        <div class="card {% if order_item.status == 'Delivered' %}delivered neon-border{% endif %}">
             <div class="card-header d-flex justify-content-between">
                 <div class="col col-lg-2">
                     {% if order_item.status == 'Delivered' %}
@@ -51,7 +72,7 @@
                     <br><small>{{ order_item.delivered_date }}</small>
                     {% else %}
                     ORDER PLACED
-                    <br><small>{{ order_item.created_at }}</small>
+                    <br><small>{{ order_item.ordered_date }}</small>
                     {% endif %}
                 </div>
                 <div class="col col-lg-2">
@@ -81,16 +102,15 @@
                 </div>
             </div>
             
-            {% for i in order_item.product.all %}
+            <!-- {% for i, quantity in product_quantities %}
             <div class="card-body d-flex product-item">
                 <div class="col col-lg-2">
                     <img src="{{ i.image.url }}" alt="{{ i.title }}" width="100" height="100">
                 </div>
                 <div class="col">
                     <h5 class="card-title">{{ i.title }}</h5>
-                    <p class="card-text">Quantity: {{ order_item.quantity }}</p>
+                    <p class="card-text">Quantity: {{ quantity }}</p>
                     <p class="card-text">{{ i.description }}</p>
-                    <!-- Add this line for debugging purposes -->
                     <a href="{% url 'single_product' i.slug %}" class="btn btn-warning">View your item</a>
                 </div>
                 <div class="col col-lg-2">
@@ -98,7 +118,7 @@
                 </div>
             </div>
             <hr>
-            {% endfor %}
+            {% endfor %} -->
         </div>
         {% endfor %}
     </div>

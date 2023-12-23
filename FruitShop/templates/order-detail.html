@@ -126,7 +126,7 @@
         <h5>Order Details</h5>
         <hr>
         <p>
-            <span> <b>Order on:</b> {{order.created_at}} </span> <span style="color: gray;">|</span> <span> <b>Delivered on:</b> {{order.delivered_date}}</span> <span style="color: gray;">|</span> <span> <b> ORDER </b> #
+            <span> <b>Order on:</b> {{order.ordered_date}} </span> <span style="color: gray;">|</span> <span> <b>Delivered on:</b> {{order.delivered_date}}</span> <span style="color: gray;">|</span> <span> <b> ORDER </b> #
                 {{order.id}}</span>
         </p>
         <div class="card">
@@ -179,14 +179,14 @@
         </div>
         <div class="card mt-3">
             <div class="cord-header">
-                {% for i in order.product.all %}
+                {% for i, quantity in product_quantities %}
                 <div class="card-body d-flex">
                     <div class="col col-lg-2">
                         <img src="{{i.image.url}}" alt="{{i.title}}" width="100" height="100">
                     </div>
                     <div class="col">
                         <h5 class="card-title">{{i.title}}</h5>
-                        <p class="card-text">Quantity: {{order.quantity}}</p>
+                        <p class="card-text">Quantity: {{quantity}}</p>
                         <p class="card-text">{{i.description}}</p>
                         <a href="" class="btn btn-warning" style="background-color: white;
                     border-radius: 6px; border: none;
@@ -241,17 +241,17 @@
                         <tbody>
                             <tr>
                                 <td class="item-description">Item(s) Subtotal:</td>
-                                <td class="item-amount">${{amount}}</td>
+                                <td class="item-amount"><b style="color: green;">+</b> ${{amount}}</td>
                             </tr>
                             <tr>
                                 <td class="item-description">Shipping:</td>
-                                <td class="item-amount">${{shipping}}</td>
+                                <td class="item-amount"><b style="color: green;">+</b> ${{shipping}}</td>
                             </tr>
                             {% if order.discount_price == 0 %}
                             {% else %}
                             <tr>
                                 <td class="item-description">Discount:</td>
-                                <td class="item-amount">${{order.discount_price}}</td>
+                                <td class="item-amount"><b style="color: red;">-</b> ${{order.discount_price}}</td>
                             </tr>
                             {% endif %}
                             <tr>
@@ -269,6 +269,33 @@
                             </tr>
                         </tbody>
                     </table>
+                </div>
+            </div>
+        </div>
+        <div class="container mt-4">
+            <h5>Ordered Items</h5>
+            <hr>
+            <div class="card mt-3">
+                <div class="cord-header">
+                    {% for i, quantity in product_quantities %}
+                    <div class="card-body d-flex">
+                        <div class="col col-lg-2">
+                            <img src="{{i.image.url}}" alt="{{i.title}}" width="100" height="100">
+                        </div>
+                        <div class="col">
+                            <h5 class="card-title">{{i.title}}</h5>
+                            <p class="card-text">Quantity: {{quantity}}</p>
+                            <p class="card-text">{{i.description}}</p>
+                            <a href="{% url 'single_product' i.slug %}" class="btn btn-warning" style="background-color: white;
+                        border-radius: 6px; border: none;
+                        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">View your item</a>
+                        </div>
+                        <div class="col col-lg-3">
+                            <a href="" class="btn btn-danger"><span>Write a product review</span></a>
+                        </div>
+                    </div>
+                    <hr>
+                    {% endfor %}
                 </div>
             </div>
         </div>

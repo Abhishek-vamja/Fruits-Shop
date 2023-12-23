@@ -17,6 +17,7 @@ Classes:
 """
 
 import math
+import json
 import razorpay
 from datetime import datetime
 from django.db.models import Q
@@ -513,6 +514,10 @@ class CheckoutView(LoginRequiredMixin, View):
             messages.warning(request, 'Please select or add an address!!')
             return redirect('checkout')
 
+        quantity = []
+        for i in cart:
+            quantity.append(i.quantity)
+        
         if 'discount_amount' in request.session:               
             order = OrderPlaced.objects.create(
                 user=auth_user, address=address,
@@ -520,7 +525,7 @@ class CheckoutView(LoginRequiredMixin, View):
             )
         else:   
             order = OrderPlaced.objects.create(
-                user=auth_user, address=address,
+                user=auth_user, address=address,quantity=quantity,
                 price=request.session['total']
             )
 
@@ -561,18 +566,21 @@ class OrderView(LoginRequiredMixin):
 
         for order in orders:
             order_amount = 0
+            quantity_list = json.loads(order.quantity)
             for product in order.product.all():
                 if not order.paid:
                     if product.is_time_limited:
-                        order_amount += product.discount_price * order.quantity
+                        order_amount += product.discount_price * sum(quantity_list)
                     else:
-                        order_amount += product.price * order.quantity
+                        order_amount += product.price * sum(quantity_list)
 
             total_amount += order_amount
 
         context = {
             'order': orders,
-            'total': total_amount
+            'total': total_amount,
+            'product_quantities': zip(order.product.all(), quantity_list),
+
         }
         return render(request, 'order.html', context)
 
@@ -588,23 +596,17 @@ class OrderView(LoginRequiredMixin):
         user_orders = OrderPlaced.objects.get(user=auth_user,id=order_id)
 
         shipping = 45
-        amount = 0
 
         for order_item in order_details:
-            for i in order_item.product.all():
-                if i.is_time_limited:
-                    value = i.discount_price * order_item.quantity
-                else:
-                    value = i.price * order_item.quantity
-                amount += value
-
-            discount = amount - order_item.price
+            quantity_list = json.loads(order_item.quantity)
+        
+        amount = order_item.price - shipping + order_item.discount_price 
 
         context = {
             'order': user_orders,
             'amount': amount,
-            'discount': discount,
             'shipping': shipping,
+            'product_quantities': zip(order_item.product.all(), quantity_list),
         }
         return render(request, 'order-detail.html', context)
 

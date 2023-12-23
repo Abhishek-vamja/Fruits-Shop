@@ -7,6 +7,16 @@ from core.models import BaseModel
 from django.conf import settings
 import datetime
 
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
+
+def validate_date_format(value):
+    try:
+        # Attempt to parse the date using the specified format
+        datetime.datetime.strptime(value, '%Y-%m-%d')
+    except ValueError:
+        # If parsing fails, raise a validation error
+        raise ValidationError(_('Invalid date format. Use YYYY-MM-DD.'), code='invalid_date_format')
 
 class Category(BaseModel):
     """Category objects."""
@@ -120,19 +130,19 @@ class OrderPlaced(BaseModel):
     """OrderPlaced objects."""
     user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
     product = models.ManyToManyField(Product)
-    quantity = models.PositiveIntegerField(default=1)
+    quantity = models.CharField(max_length=255,blank=True,null=True)
     price = models.FloatField(default=0)
     discount_price = models.FloatField(default=0)
     address = models.ForeignKey(Address, on_delete=models.CASCADE, default="")
     status = models.CharField(max_length=50,choices=STATUS_CHOICE,default='Confirmed')
     paid = models.BooleanField(default=False)
     payment_mode = models.CharField(max_length=255,choices=PAYMENT,default='COD')
-    ordered_date = models.DateTimeField(auto_now_add=True)
-    delivered_date = models.DateField(null=True, default="", blank=True)
-
+    ordered_date = models.DateTimeField(auto_now_add=True,null=True)
+    delivered_date = models.DateField(auto_now_add=True)
+    
     class Meta:
         ordering = ['-ordered_date']
-    
+
     def __str__(self) -> str:
         return f"Order {self.id} by {self.user}"
 
