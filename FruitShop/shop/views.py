@@ -583,25 +583,13 @@ class OrderView(LoginRequiredMixin):
         """
         orders = OrderPlaced.objects.filter(user=request.user)
         try:
-            total_amount = 0
 
             for order in orders:
                 quantity_list = json.loads(order.quantity)
-                order_amount = 0
-                for product in order.product.all():
-                    if not order.paid:
-                        if product.is_time_limited:
-                            order_amount += product.discount_price * sum(quantity_list)
-                        else:
-                            order_amount += product.price * sum(quantity_list)
-
-                total_amount += order_amount
 
             context = {
                 'order': orders,
-                'total': total_amount,
                 'product_quantities': zip(order.product.all(), quantity_list),
-
             }
         except:
             return redirect('shop')
