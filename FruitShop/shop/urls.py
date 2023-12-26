@@ -28,5 +28,6 @@ urlpatterns = [
 
     path('order/', OrderView.get_order, name='order'),
     path('order-detail/<uuid:order_id>/', OrderView.get_order_details, name='order-detail'),
-    path('delete_order/<str:order_id>/', OrderView.delete_order, name='delete_order')
+    path('delete_order/<str:order_id>/', OrderView.delete_order, name='delete_order'),
+    path('download_bill/<uuid:order_id>/', OrderView.download_billing, name='download_billing'),
 ]

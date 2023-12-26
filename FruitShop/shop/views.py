@@ -19,13 +19,16 @@ Classes:
 import math
 import json
 import razorpay
+from weasyprint import HTML
 from datetime import datetime
 from django.db.models import Q
 from django.conf import settings
 from django.contrib import messages
+from django.http import HttpResponse
 from django.views.generic import View
 from django.http import HttpResponseRedirect
 from user.views import get_time_of_day_greeting
+from django.template.loader import render_to_string
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, get_object_or_404
@@ -385,7 +388,10 @@ class CartVIew(LoginRequiredMixin, View):
 
         amount = sum(self.calculate_item_total(item) for item in cart_items)
         if cart_items.exists():
-            shipping = 45
+            if amount >= 1000:
+                shipping = 0
+            else:
+                shipping = 45
         else:
             shipping = 0
 
@@ -488,14 +494,18 @@ class CheckoutView(LoginRequiredMixin, View):
         cart = carts.filter(user=self.request.user).order_by('-id').distinct()
 
         amount = 0
-        shipping = 45
         for i in cart:
             if i.product.is_time_limited:
                 value = i.quantity * i.product.discount_price
             else:
                 value = i.quantity * i.product.price
             amount = amount + value
-        
+           
+        if amount >= 1000:
+            shipping = 0
+        else:
+            shipping = 45
+
         if 'discount_amount' in request.session:
             total = amount + shipping - request.session['discount_amount']
             request.session['total'] = total
@@ -607,11 +617,14 @@ class OrderView(LoginRequiredMixin):
         order_details = OrderPlaced.objects.filter(user=auth_user,id=order_id)
         user_orders = OrderPlaced.objects.get(user=auth_user,id=order_id)
 
-        shipping = 45
-
         for order_item in order_details:
             quantity_list = json.loads(order_item.quantity)
         
+        if user_orders.price >= 1000:
+            shipping = 0
+        else:
+            shipping = 45
+
         amount = order_item.price - shipping + order_item.discount_price 
 
         context = {
@@ -630,3 +643,27 @@ class OrderView(LoginRequiredMixin):
         order = OrderPlaced.objects.get(id=order_id)
         order.delete()
         return redirect('order')
+
+    def download_billing(request, order_id):
+        user = request.user
+        order = OrderPlaced.objects.get(id=order_id)
+        orders = OrderPlaced.objects.filter(user=user,id=order_id)
+
+        for order_items in orders:
+            quantity_list = json.loads(order_items.quantity)
+
+        context = {
+            'order': order,
+            'product_quantities': zip(order_items.product.all(), quantity_list),
+        }
+        # Render the billing template to HTML
+        billing_info_html = render_to_string('billing_info.html', context)
+
+        # Create a PDF file using WeasyPrint
+        pdf_file = HTML(string=billing_info_html).write_pdf()
+
+        # Create a response with the PDF file
+        response = HttpResponse(pdf_file, content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename=FruitKha online  billing.pdf'
+
+        return response

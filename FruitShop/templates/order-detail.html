@@ -128,6 +128,7 @@
         <p>
             <span> <b>Order on:</b> {{order.ordered_date}} </span> <span style="color: gray;">|</span> <span> <b>Delivered on:</b> {{order.delivered_date}}</span> <span style="color: gray;">|</span> <span> <b> ORDER </b> #
                 {{order.id}}</span>
+            </span>
         </p>
         <div class="card">
             <div class="row m-4">
@@ -153,10 +154,17 @@
                                 <td class="item-description">Item(s) Subtotal:</td>
                                 <td class="item-amount"><b style="color: green;">+</b> ${{amount}}</td>
                             </tr>
+                            {% if shipping == 0 %}
+                            <tr>
+                                <td class="item-description" style="text-decoration: line-through;">Shipping:</td>
+                                <td class="item-amount"><b style="color: green;">Free</b></td>
+                            </tr>
+                            {% else %}
                             <tr>
                                 <td class="item-description">Shipping:</td>
                                 <td class="item-amount"><b style="color: green;">+</b> ${{shipping}}</td>
                             </tr>
+                            {% endif %}
                             {% if order.discount_price == 0 %}
                             {% else %}
                             <tr>
@@ -174,6 +182,9 @@
                             </tr>
                         </tbody>
                     </table>
+                    <a href="{% url 'download_billing' order.id %}" class="btn btn-warning" download>
+                        <i class="fas fa-download"></i> Download Bill As Pdf
+                    </a>
                 </div>
             </div>
         </div>
@@ -243,10 +254,17 @@
                                 <td class="item-description">Item(s) Subtotal:</td>
                                 <td class="item-amount"><b style="color: green;">+</b> ${{amount}}</td>
                             </tr>
+                            {% if shipping == 0 %}
+                            <tr>
+                                <td class="item-description" style="text-decoration: line-through;">Shipping:</td>
+                                <td class="item-amount"><b style="color: green;">Free</b></td>
+                            </tr>
+                            {% else %}
                             <tr>
                                 <td class="item-description">Shipping:</td>
                                 <td class="item-amount"><b style="color: green;">+</b> ${{shipping}}</td>
                             </tr>
+                            {% endif %}
                             {% if order.discount_price == 0 %}
                             {% else %}
                             <tr>
