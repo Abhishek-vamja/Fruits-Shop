@@ -34,7 +34,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from shop.models import (
-    Category, Product, Cart, OrderPlaced, Coupon, Address, Contact, News, Comment, Quote
+    Category, Product, Cart, OrderPlaced, Coupon, Address, Contact, News, Comment, Quote,
+    Review
 )
 
 
@@ -619,7 +620,7 @@ class OrderView(LoginRequiredMixin):
 
         for order_item in order_details:
             quantity_list = json.loads(order_item.quantity)
-        
+
         if user_orders.price >= 1000:
             shipping = 0
         else:
@@ -664,6 +665,22 @@ class OrderView(LoginRequiredMixin):
 
         # Create a response with the PDF file
         response = HttpResponse(pdf_file, content_type='application/pdf')
-        response['Content-Disposition'] = f'attachment; filename=FruitKha online  billing.pdf'
+        response['Content-Disposition'] = f'attachment; filename={user.name}_FruitKha_online_billing.pdf'
 
         return response
+    
+    def order_product_review(request, product_id):
+        
+        product = Product.objects.get(id=product_id)
+
+        if request.method == 'POST':
+
+            rating = request.POST.get('rating')
+            review = request.POST.get('review')
+
+            review_obj = Review.objects.create(
+                user=request.user, product=product, rating=rating, review=review
+            )
+
+            review_obj.save()
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))

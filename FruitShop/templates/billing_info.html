@@ -60,6 +60,7 @@
 
 <body>
     <div class="receipt">
+        <h1><a href="http://127.0.0.1:8000/shop/">FruitKha</a></h1>
         <h1>Billing Receipt</h1>
 
         <p><strong>Order ID:</strong> {{ order.id }}</p>
@@ -100,6 +101,10 @@
 
         <div class="total-amount">
             <h2>Total Amount</h2>
+            {% if order.discount_price == 0 %}
+            {% else %}
+            <p><strong>Discount:</strong> ${{ order.discount_price }}</p>
+            {% endif %}
             <p><strong>Total:</strong> ${{ order.price }}</p>
         </div>
     </div>

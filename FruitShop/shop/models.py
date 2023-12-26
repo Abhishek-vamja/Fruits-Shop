@@ -195,3 +195,16 @@ class Quote(BaseModel):
     
     def __str__(self) -> str:
         return f"Quote by {self.user}"
+
+class Review(BaseModel):
+    """Review objects."""
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+    product = models.ForeignKey(Product,on_delete=models.CASCADE)
+    rating = models.PositiveIntegerField()
+    review = models.TextField(null=True, default="")
+
+    class Meta:
+        ordering = ['-created_at']
+    
+    def __str__(self) -> str:
+        return f"Review by {self.user} on {self.product.title}"
